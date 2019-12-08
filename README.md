@@ -10,7 +10,7 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
 ## Anleitung:
 1.  Arduino IDE installieren: https://www.arduino.cc/en/main/software
 2.  ESP32 Board installieren: https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/
-3.  TOOLS -> Manage Libraries.. anklicken und nach der "ACROBOTIC SSD1306" suchen und installieren. Anschließend nach der "Arduinojson" suchen und ebenfalls installieren.
+3.  TOOLS -> Manage Libraries.. anklicken und nach der "ESP8266 and ESP32 OLED driver for SSD1306 displays" (ThingPulse) suchen und installieren. Anschließend nach der "Arduinojson" suchen und ebenfalls installieren.
 4.  Tools -> Board -> "TTGO LoEa-32-OLED V1" auswählen.
 5.  Tools ->  Port anschauen und die Enträge merken falls nicht ausgeblendet.
 6.  ESP32 mit dem Kabel mit dem Computer verbinden und erneut unter Tools ->  Port schauen nun müsste ein neuer Port hinzugekommen sein/ Port ist nicht mehr ausgeblendet. Diesen nun auswählen.
