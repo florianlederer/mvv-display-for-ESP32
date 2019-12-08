@@ -14,7 +14,7 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
 4.  Tools -> Board -> "TTGO LoEa-32-OLED V1" auswählen.
 5.  Tools ->  Port anschauen und die Enträge merken falls nicht ausgeblendet.
 6.  ESP32 mit dem Kabel mit dem Computer verbinden und erneut unter Tools ->  Port schauen nun müsste ein neuer Port hinzugekommen sein/ Port ist nicht mehr ausgeblendet. Diesen nun auswählen.
-7.  Repository clonen und im Editor öffnen.
+7.  main.c aus diesem Repo kopieren und in der Arduino IDE einfügen.
 8.  Sketch -> Verify/Compile und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
 9. In den Zeilen const char* ssid = "XXX"; sowie const char* password =  "XXX"; die drei XXX jeweils durch WLAN Namen und Passwort ersetzten.
 10. Die Seite https://www.mvg.de/dienste/abfahrtszeiten.html im Firefox Webbrowser öffnen und anschließend STRG + SHIFT + E drücken. Jetzt sollte ein neues Fenster aufgegangen sein welches den Netzwerkverkehr mitschneidet. 
