@@ -1,5 +1,5 @@
 # mvv display for ESP32
-Zeigt abfahrten der MVV auf kleiem dispay.
+Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an.
  
 ## Benötigtes:
 - ESP32 mit OLED Display: https://www.amazon.de/dp/B076P8GRWV/ref=cm_sw_em_r_mt_dp_U_Md.6DbQCS5WA1
