@@ -24,4 +24,4 @@ Zeigt abfahrten der MVV auf kleiem dispay.
 14. Nun Auf den Pfeil links oben  neben dem in Schritt 8 gedrücken haken drücken.
 15. Jetzt sollten auf dem Display die aktuellen Abfahrten der Sbahn angezeigt werden
 
-@OJ vom jodel: [shared.jodel.com/58NiubGCf2?channel=other](shared.jodel.com/58NiubGCf2?channel=other) erstell nen issue, dann übertrage ich dir das repo
+@OJ vom jodel: [https://shared.jodel.com/58NiubGCf2?channel=other](https://shared.jodel.com/58NiubGCf2?channel=other) erstell nen issue, dann übertrage ich dir das repo
