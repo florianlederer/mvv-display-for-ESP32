@@ -17,7 +17,7 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
 7.  Repository clonen und im Editor öffnen.
 8.  Sketch -> Verify/Compile und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
 9. In den Zeilen const char* ssid = "XXX"; sowie const char* password =  "XXX"; die drei XXX jeweils durch WLAN Namen und Passwort ersetzten.
-10. Die Seite https://www.mvg.de/dienste/abfahrtszeiten.html im Firefox Webbrowser öffnen und anschließend STRG + SHIFT + E drücken. Jetzt sollte ein neues Fenster aufgegangen sein, welches den Netzwerkverkehr mitschneidet. 
+10. Die Seite https://www.mvg.de/dienste/abfahrtszeiten.html im Firefox Webbrowser öffnen und anschließend STRG + SHIFT + E drücken. Jetzt sollte ein neues Fenster aufgegangen sein welches den Netzwerkverkehr mitschneidet. 
 11. Nun den gewünschten Bahnhof ganz normal eingeben und sich die aktuellen Abfahrten anzeigen lassen.
 12. Im in Schritt 10 geöffneten Fenster bei Type nach dem/den Paketen mit json suchen und die Bahnhof nun in der Spalte File rauslesen.
 13. Das was in File steht muss man nun in der Zeile const char* url =.... am Ende ersetzen.
