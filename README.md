@@ -25,5 +25,8 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
 15. Jetzt sollten auf dem Display die aktuellen Abfahrten der Sbahn angezeigt werden
 16. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden.
 
+## API:
+Aktuell wird die MVG API verwendet. Diese liefert Infos für alle Verkehrsmittel der MVG (Bus/Sbahn/Ubahn/Tram). Sie stellt die Grundlage für die MVG Website sowie die MVG App dar. Allerdings sind die Echtzeitinformationen besonders bei Störungen nicht optimal. Aus diesem Grund gibt es einen neuen Branch der sich mit der geops-API, die unteranderem in der München Navigator APP oder auf s-bahn-muenchen-live.de zum Einsatz kommt, beschäftigt. Hier bekommt man sehr genaue Echtzeiitinformationen, allerdings ausschließlich für die Sbahn.
+
 ## Jodel:
 [https://shared.jodel.com/58NiubGCf2?channel=other](https://shared.jodel.com/58NiubGCf2?channel=other) 
