@@ -40,6 +40,19 @@ void espDelay(int ms)
     esp_light_sleep_start();
 }
 
+void drawTopLine()
+{
+    tft.fillRect(0, 0, 240, 8,TFT_YELLOW);
+    tft.setTextFont(GLCD);
+    tft.setTextColor(0x005, TFT_YELLOW);
+    tft.drawString("Linie", 1, 0);
+    tft.drawString("Ziel", 33, 0);
+    tft.drawString("Gleis", 128, 0);
+    tft.drawString("A", 169, 0);
+    tft.drawString("B", 184, 0);
+    tft.drawString("C", 200, 0);
+    tft.drawString("Min", 220, 0);
+}
 
 void drawSbahn(int y_display, char * line, char * destination, int track, int wagon, int minutes)
 {
@@ -100,11 +113,19 @@ void setup()
          digitalWrite(TFT_BL, TFT_BACKLIGHT_ON); // Turn backlight on. TFT_BACKLIGHT_ON has been set in the TFT_eSPI library in the User Setup file TTGO_T_Display.h
     }
 
-
-    drawSbahn(0, "S3", "Maisach", 1, 3, 1);
-    drawSbahn(17, "S3", "Holzkirchen", 1, 2, 10);
-    drawSbahn(34, "S3", "Deisenhofen", 1, 1, 100);
+    drawTopLine();
     
+    int line_height = 15;
+    int offset = 9;
+    
+    drawSbahn(0*line_height+offset, "S3", "Maisach", 1, 3, 1);
+    drawSbahn(1*line_height+offset, "S3", "Holzkirchen", 1, 2, 10);
+    drawSbahn(2*line_height+offset, "S3", "Deisenhofen", 1, 1, 100);
+    drawSbahn(3*line_height+offset, "S3", "Maisach", 1, 3, 1);
+    drawSbahn(4*line_height+offset, "S3", "Holzkirchen", 1, 2, 10);
+    drawSbahn(5*line_height+offset, "S3", "Deisenhofen", 1, 1, 100);
+    drawSbahn(6*line_height+offset, "S3", "Maisach", 1, 3, 1);
+    drawSbahn(7*line_height+offset, "S3", "Holzkirchen", 1, 2, 10);
     /*
     tft.setFreeFont(FF17);
     tft.setTextDatum(TL_DATUM);
