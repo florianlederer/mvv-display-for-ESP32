@@ -16,7 +16,7 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
 1.  ESP32 mit dem Kabel mit dem Computer verbinden und erneut unter Tools ->  Port schauen nun müsste ein neuer Port hinzugekommen sein/ Port ist nicht mehr ausgeblendet. Diesen nun auswählen.
 1. MVV_ESP/MVV_ESP.ino aus diesem Repo kopieren und in der Arduino IDE einfügen.
 1. Sketch -> Verify/Compile und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
-1. config.h.dist kopieren nach config.dist und mindestens eine eigene Konfiguration eintragen
+1. config.h.dist kopieren nach config.h und mindestens eine eigene Konfiguration eintragen
     1. Die Seite https://www.mvg.de/dienste/abfahrtszeiten.html im Firefox Webbrowser öffnen und anschließend STRG + SHIFT + E drücken. Jetzt sollte ein neues Fenster aufgegangen sein welches den Netzwerkverkehr mitschneidet.
     1. Nun den gewünschten Bahnhof ganz normal eingeben und sich die aktuellen Abfahrten anzeigen lassen.
     1. Im in Schritt 9.i geöffneten Fenster bei Type nach dem/den Paketen mit json suchen und die Bahnhof nun in der Spalte File rauslesen.
