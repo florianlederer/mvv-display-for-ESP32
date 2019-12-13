@@ -26,7 +26,6 @@ typedef struct {
     const char *exclude_destinations[MAX_EXCLUDE_DESTINATION];
 } Config;
 #include "config.h";
-Config config;
 
 //https://www.mvg.de/dienste/abfahrtszeiten.html
 //const char* url =  "https://www.mvg.de/api/fahrinfo/departure/de:09162:6?footway=0";
@@ -186,15 +185,19 @@ void setup() {
     }
 
     configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-    config = configs[config_number];
 
 }
 
 void loop() {
     if (WiFi.status() == WL_CONNECTED) {
+        Config config = configs[config_number];
         switch (config.type) {
             case mvg_api: {
                 handle_mvg_api(config);
+                break;
+            }
+            case geops_api: {
+                // TODO
                 break;
             }
             default: {

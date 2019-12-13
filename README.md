@@ -21,6 +21,8 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
     1. Nun den gewünschten Bahnhof ganz normal eingeben und sich die aktuellen Abfahrten anzeigen lassen.
     1. Im in Schritt 9.i geöffneten Fenster bei Type nach dem/den Paketen mit json suchen und die Bahnhof nun in der Spalte File rauslesen.
     1. Die ermittelte URL in die config.h eintragen
+    1. Ein `*` bei include_lines zeigt alle verfügbaren Linien an
+    1. exclude_destinations kann bei Bedarf leer gelassen werden
 1. Sketch -> Upload
 1. Jetzt sollten auf dem Display die aktuellen Abfahrten angezeigt werden.
 1. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden.
