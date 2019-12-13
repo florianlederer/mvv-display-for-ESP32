@@ -2,7 +2,7 @@
 Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es handelt sich hierbei um kein Projekt der MVV.
  
 ## Benötigtes:
-- ESP32 mit OLED Display: https://www.amazon.de/dp/B076P8GRWV/ref=cm_sw_em_r_mt_dp_U_Md.6DbQCS5WA1
+- ESP32 mit OLED Display: https://www.amazon.de/dp/B076P8GRWV/
 - Micro USB Kabel
 - USB Netzteil
 - Computer zum Programmieren
