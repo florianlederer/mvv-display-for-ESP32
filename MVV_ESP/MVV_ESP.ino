@@ -32,9 +32,6 @@
 TFT_eSPI tft = TFT_eSPI(135, 240); // Invoke custom library
 
 
-char buff[512];
-
-
 //! Long time delay, it is recommended to use shallow sleep, which can effectively reduce the current consumption
 void espDelay(int ms)
 {   
@@ -44,6 +41,47 @@ void espDelay(int ms)
 }
 
 
+void drawSbahn(int y_display, char * line, char * destination, int track, int wagon, int minutes)
+{
+  char str_buffer[10];
+
+    
+    tft.setFreeFont(FF17);
+    tft.setTextDatum(TL_DATUM);
+
+    //line
+    tft.fillRoundRect(0, y_display, 28, 15, 7,TFT_MAGENTA);
+    tft.setTextColor(0x005);
+    tft.drawString(line, 3, y_display); 
+
+    //destination
+    tft.setTextColor(TFT_WHITE);
+    tft.drawString(destination, 32, y_display);
+
+    //track
+    sprintf(str_buffer, "%u", track);
+    tft.drawString(str_buffer, 150, y_display);
+
+    //wagon
+    tft.drawString("_ _ _", 167, y_display);
+    switch(wagon)
+    {
+      case 3:
+        tft.fillRoundRect(195, y_display+4, 14, 11, 3,TFT_WHITE); //rechts
+      case 2:
+        tft.fillRoundRect(165, y_display+4, 14, 11, 3,TFT_WHITE); //links
+      case 1:
+        tft.fillRoundRect(180, y_display+4, 14, 11, 3,TFT_WHITE); //mitte
+       default:
+          break;
+    }
+
+    //minutes
+    tft.setTextDatum(TR_DATUM);
+    sprintf(str_buffer, "%u", minutes);
+    tft.drawString(str_buffer, 240,y_display);
+  
+}
 
 void setup()
 {
@@ -62,6 +100,12 @@ void setup()
          digitalWrite(TFT_BL, TFT_BACKLIGHT_ON); // Turn backlight on. TFT_BACKLIGHT_ON has been set in the TFT_eSPI library in the User Setup file TTGO_T_Display.h
     }
 
+
+    drawSbahn(0, "S3", "Maisach", 1, 3, 1);
+    drawSbahn(17, "S3", "Holzkirchen", 1, 2, 10);
+    drawSbahn(34, "S3", "Deisenhofen", 1, 1, 100);
+    
+    /*
     tft.setFreeFont(FF17);
     tft.setTextDatum(TL_DATUM);
 
@@ -79,9 +123,8 @@ void setup()
     tft.fillRoundRect(180, 3, 14, 11, 3,TFT_WHITE); //mitte
     tft.fillRoundRect(195, 3, 14, 11, 3,TFT_WHITE); //rechts
 
-
-    
     tft.drawString("13", 220,0);
+    */
 
     /*
     tft.setTextFont(GLCD);
@@ -116,7 +159,6 @@ void setup()
 
 
 }
-
 
 
 void loop()
