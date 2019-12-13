@@ -23,6 +23,7 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
     1. Die ermittelte URL in die config.h eintragen
     1. Ein `*` bei include_lines zeigt alle verfügbaren Linien an
     1. exclude_destinations kann bei Bedarf leer gelassen werden
+    1. Werte für include_lines und exclude_destinations können dem JSON der API entnommen werden
 1. Sketch -> Upload
 1. Jetzt sollten auf dem Display die aktuellen Abfahrten angezeigt werden.
 1. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden.
