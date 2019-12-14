@@ -40,6 +40,7 @@ int config_number = -1;
 int connect_wifi();
 void setup_display();
 void handle_mvg_api(Config config);
+void drawDeparture(int display_line, const char * line, const char * destination, int track, int wagon, int minutes);
 
 void setup() {
 
@@ -189,17 +190,9 @@ void handle_mvg_api(Config config)
                     }
                     Serial.println(minutes);
 
-                    String label = doc["departures"][i]["label"].as<String>();
-                    String destination  = doc["departures"][i]["destination"].as<String>();
-                    String full_name = label + " " + destination;
 
-                    display.setTextAlignment (TEXT_ALIGN_LEFT);
-                    display.setFont (ArialMT_Plain_10);
-                    display.drawString( 0 , cnt * 16, full_name);
+                    drawDeparture(cnt, doc["departures"][i]["label"].as<String>(), doc["departures"][i]["destination"].as<String>(), 0,0, minutes);
 
-                    display.setFont (ArialMT_Plain_16);
-                    display.setTextAlignment (TEXT_ALIGN_RIGHT);
-                    display.drawString( 128, cnt * 16, String(minutes));
                     ++cnt;
                 }
                 ++i;
@@ -211,4 +204,17 @@ void handle_mvg_api(Config config)
         Serial.println(httpResponseCode);
     }
     http.end();
+}
+
+
+void drawDeparture(int display_line, String line, String destination, int track, int wagon, int minutes)
+{
+    String full_name = line + " " + destination;
+    display.setTextAlignment (TEXT_ALIGN_LEFT);
+    display.setFont (ArialMT_Plain_10);
+    display.drawStringMaxWidth(0, display_line * 16, 100, full_name);
+
+    display.setFont (ArialMT_Plain_16);
+    display.setTextAlignment (TEXT_ALIGN_RIGHT);
+    display.drawString( 128, display_line * 16, String(minutes));
 }
