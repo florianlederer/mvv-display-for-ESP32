@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <ArduinoJson.h>
 #define ARDUINOJSON_USE_LONG_LONG 1
+#include <ArduinoJson.h>
 #include <Arduino.h>
 #include "Wire.h"
 #include "SSD1306.h"
