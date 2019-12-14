@@ -7,6 +7,7 @@
 #include "SSD1306.h"
 #include "time.h"
 
+#define MAX_INCLUDE_TYPE 10
 #define MAX_INCLUDE_LINE 10
 #define MAX_EXCLUDE_DESTINATION 10
 #define MAX_JSON_DOCUMENT 20000
@@ -22,6 +23,7 @@ typedef struct {
     const char *wifi_pass;
     const enum types type;
     const char *url;
+    const char *include_type[MAX_INCLUDE_TYPE];
     const char *include_line[MAX_INCLUDE_LINE];
     const char *exclude_destinations[MAX_EXCLUDE_DESTINATION];
 } Config;
@@ -40,6 +42,7 @@ int config_number = -1;
 int connect_wifi();
 void setup_display();
 void handle_mvg_api(Config config);
+void drawDeparture(int display_line, const char * line, const char * destination, int track, int wagon, int minutes);
 
 void setup() {
 
@@ -151,8 +154,24 @@ void handle_mvg_api(Config config)
             while (i < departures_length && cnt < 4) {
                 // Extract what we are interested in from response
                 // based on config
+                bool interesting_type = false;
                 bool interesting_line = false;
                 bool interesting_destination = true;
+                
+                for (int j=0; j<MAX_INCLUDE_TYPE; ++j) {
+                    Serial.println(config.include_type[j]);
+                    if (config.include_type[j] && strcmp(config.include_type[j], "*") == 0) {
+                        // We want to see all types
+                        interesting_type = true;
+                        break;
+                    }
+                    if (config.include_type[j] && strcmp(config.include_type[j], doc["departures"][i]["product"]) == 0) {
+                        // We want to see this type
+                        interesting_type = true;
+                        break;
+                    }
+                }
+                
                 for (int j=0; j<MAX_INCLUDE_LINE; ++j) {
                     Serial.println(config.include_line[j]);
                     if (config.include_line[j] && strcmp(config.include_line[j], "*") == 0) {
@@ -166,7 +185,7 @@ void handle_mvg_api(Config config)
                         break;
                     }
                 }
-                if (interesting_line) {
+                if (interesting_type && interesting_line) {
                     for (int j=0; j<MAX_EXCLUDE_DESTINATION; ++j) {
                         if (config.exclude_destinations[j] && strcmp(config.exclude_destinations[j], doc["departures"][i]["destination"]) == 0) {
                             interesting_destination = false;
@@ -174,7 +193,7 @@ void handle_mvg_api(Config config)
                         }
                     }
                 }
-                if (interesting_line && interesting_destination) {
+                if (interesting_type && interesting_line && interesting_destination) {
                     //Calc minutes until departure
                     unsigned long departure = doc["departures"][i]["departureTime"].as<long long>() / 1000; //ms to seconds
                     Serial.println(departure);
@@ -189,17 +208,8 @@ void handle_mvg_api(Config config)
                     }
                     Serial.println(minutes);
 
-                    String label = doc["departures"][i]["label"].as<String>();
-                    String destination  = doc["departures"][i]["destination"].as<String>();
-                    String full_name = label + " " + destination;
+                    drawDeparture(cnt, doc["departures"][i]["label"].as<String>(), doc["departures"][i]["destination"].as<String>(), 0,0, minutes);
 
-                    display.setTextAlignment (TEXT_ALIGN_LEFT);
-                    display.setFont (ArialMT_Plain_10);
-                    display.drawString( 0 , cnt * 16, full_name);
-
-                    display.setFont (ArialMT_Plain_16);
-                    display.setTextAlignment (TEXT_ALIGN_RIGHT);
-                    display.drawString( 128, cnt * 16, String(minutes));
                     ++cnt;
                 }
                 ++i;
@@ -211,4 +221,18 @@ void handle_mvg_api(Config config)
         Serial.println(httpResponseCode);
     }
     http.end();
+}
+
+
+void drawDeparture(int display_line, String line, String destination, int track, int wagon, int minutes)
+{
+    String full_name = line + " " + destination;
+    String sliced_name = full_name.substring(0, 19); 
+    display.setTextAlignment (TEXT_ALIGN_LEFT);
+    display.setFont (ArialMT_Plain_10);
+    display.drawString(0, display_line * 16, sliced_name);
+
+    display.setFont (ArialMT_Plain_16);
+    display.setTextAlignment (TEXT_ALIGN_RIGHT);
+    display.drawString( 128, display_line * 16, String(minutes));
 }
