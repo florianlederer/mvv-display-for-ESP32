@@ -1,4 +1,4 @@
-static Config configs[] = {
+static const Config configs[] = {
     {
         /* wifi_name           */ "foo",
         /* wifi_pass           */ "bar",

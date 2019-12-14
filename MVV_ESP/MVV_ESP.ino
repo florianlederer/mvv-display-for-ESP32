@@ -1,21 +1,21 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#define ARDUINOJSON_USE_LONG_LONG 1
 #include <ArduinoJson.h>
-
+#define ARDUINOJSON_USE_LONG_LONG 1
 #include <Arduino.h>
 #include "Wire.h"
 #include "SSD1306.h"
-
 #include "time.h"
+
+#define MAX_INCLUDE_LINE 10
+#define MAX_EXCLUDE_DESTINATION 10
+#define MAX_JSON_DOCUMENT 20000
 
 enum types {
     mvg_api,
     geops_api
 };
 
-const int MAX_INCLUDE_LINE = 10;
-const int MAX_EXCLUDE_DESTINATION = 10;
 
 typedef struct {
     const char *wifi_name;
@@ -27,12 +27,9 @@ typedef struct {
 } Config;
 #include "config.h";
 
-//https://www.mvg.de/dienste/abfahrtszeiten.html
-//const char* url =  "https://www.mvg.de/api/fahrinfo/departure/de:09162:6?footway=0";
-
 SSD1306 display (0x3c, 4, 15);
 
-StaticJsonDocument<20000> doc;
+StaticJsonDocument<MAX_JSON_DOCUMENT> doc;
 
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 3600;
@@ -40,7 +37,50 @@ const int   daylightOffset_sec = 3600;
 const int   number_of_configs = sizeof(configs) / sizeof(*configs);
 int config_number = -1;
 
-int connect_wifi() {
+int connect_wifi();
+void setup_display();
+void handle_mvg_api(Config config);
+
+void setup() {
+
+    Serial.begin(115200);
+
+    setup_display();
+
+    delay(4000);   //Delay needed before calling the WiFi.begin
+
+    while (config_number == -1) {
+        config_number = connect_wifi();
+    }
+
+    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+
+}
+
+void loop() {
+    if (WiFi.status() == WL_CONNECTED) {
+        Config config = configs[config_number];
+        switch (config.type) {
+            case mvg_api: {
+                handle_mvg_api(config);
+                break;
+            }
+            case geops_api: {
+                // TODO
+                break;
+            }
+            default: {
+                Serial.println("Unkown config type");
+            }
+        }
+    } else {
+        Serial.println("Error in WiFi connection");
+    }
+    delay(30000);  //Send a request every 30 seconds
+}
+
+int connect_wifi() 
+{
     int number_of_networks = WiFi.scanNetworks();
     if (number_of_networks == -1 ) {
         Serial.println("No networks available");
@@ -64,14 +104,20 @@ int connect_wifi() {
     return -1;
 }
 
-void setup_display() {
+void setup_display() 
+{
+    pinMode (16, OUTPUT);
+    digitalWrite (16, LOW); // set GPIO16 low to reset OLED
+    delay (50);
+    digitalWrite (16, HIGH); // while OLED is running, GPIO16 must go high
     display.init ();
     display.flipScreenVertically ();
     display.setFont (ArialMT_Plain_10);
     delay(1000);
 }
 
-void handle_mvg_api(Config config) {
+void handle_mvg_api(Config config) 
+{
     HTTPClient http;
 
     http.begin(config.url);
@@ -165,47 +211,4 @@ void handle_mvg_api(Config config) {
         Serial.println(httpResponseCode);
     }
     http.end();
-}
-
-void setup() {
-
-    Serial.begin(115200);
-
-    pinMode (16, OUTPUT);
-    digitalWrite (16, LOW); // set GPIO16 low to reset OLED
-    delay (50);
-    digitalWrite (16, HIGH); // while OLED is running, GPIO16 must go high
-
-    setup_display();
-
-    delay(4000);   //Delay needed before calling the WiFi.begin
-
-    while (config_number == -1) {
-        config_number = connect_wifi();
-    }
-
-    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
-
-}
-
-void loop() {
-    if (WiFi.status() == WL_CONNECTED) {
-        Config config = configs[config_number];
-        switch (config.type) {
-            case mvg_api: {
-                handle_mvg_api(config);
-                break;
-            }
-            case geops_api: {
-                // TODO
-                break;
-            }
-            default: {
-                Serial.println("Unkown config type");
-            }
-        }
-    } else {
-        Serial.println("Error in WiFi connection");
-    }
-    delay(30000);  //Send a request every 30 seconds
 }
