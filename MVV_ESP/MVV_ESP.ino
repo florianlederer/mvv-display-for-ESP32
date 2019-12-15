@@ -1,11 +1,15 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
+//timestamp in ms needs long long
 #define ARDUINOJSON_USE_LONG_LONG 1
+//geops api uses unicode characters
+#define ARDUINOJSON_DECODE_UNICODE 1 
 #include <ArduinoJson.h>
 #include <Arduino.h>
 #include "Wire.h"
 #include "SSD1306.h"
 #include "time.h"
+#include <ArduinoWebsockets.h>
 
 #define MAX_INCLUDE_TYPE 10
 #define MAX_INCLUDE_LINE 10
@@ -29,6 +33,19 @@ typedef struct {
 } Config;
 #include "config.h";
 
+typedef struct {
+  unsigned long long aimed_time;
+  unsigned long long estimated_time;
+  String line;
+  String destination; 
+  int track; 
+  int wagon; 
+} Depature;
+
+Depature depature_array[100];
+
+websockets::WebsocketsClient client;
+
 SSD1306 display (0x3c, 4, 15);
 
 StaticJsonDocument<MAX_JSON_DOCUMENT> doc;
@@ -43,6 +60,8 @@ int connect_wifi();
 void setup_display();
 void handle_mvg_api(Config config);
 void drawDeparture(int display_line, const char * line, const char * destination, int track, int wagon, int minutes);
+void init_geops_api();
+void handle_geops_api(Config config);
 
 void setup() {
 
@@ -55,6 +74,18 @@ void setup() {
     while (config_number == -1) {
         config_number = connect_wifi();
     }
+    Config loaded_config = configs[config_number];
+
+    switch (loaded_config.type) {
+    case mvg_api:
+        break;
+    case geops_api:
+        init_geops_api();
+        break;
+    default:
+        Serial.println("Unkown config type"); 
+        break;
+    }
 
     configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
@@ -62,24 +93,23 @@ void setup() {
 
 void loop() {
     if (WiFi.status() == WL_CONNECTED) {
-        Config config = configs[config_number];
-        switch (config.type) {
-            case mvg_api: {
-                handle_mvg_api(config);
+        Config loaded_config = configs[config_number];
+        switch (loaded_config.type) 
+            {
+            case mvg_api:
+                handle_mvg_api(loaded_config);
                 break;
-            }
-            case geops_api: {
-                // TODO
+            case geops_api:
+                handle_geops_api(loaded_config);
                 break;
-            }
-            default: {
+            default:
                 Serial.println("Unkown config type");
             }
         }
-    } else {
+    else
+    {
         Serial.println("Error in WiFi connection");
     }
-    delay(30000);  //Send a request every 30 seconds
 }
 
 int connect_wifi() 
@@ -221,6 +251,7 @@ void handle_mvg_api(Config config)
         Serial.println(httpResponseCode);
     }
     http.end();
+    delay(30000);  //Send a request every 30 seconds
 }
 
 
@@ -235,4 +266,40 @@ void drawDeparture(int display_line, String line, String destination, int track,
     display.setFont (ArialMT_Plain_16);
     display.setTextAlignment (TEXT_ALIGN_RIGHT);
     display.drawString( 128, display_line * 16, String(minutes));
+}
+
+void init_geops_api()
+{
+     bool connected = client.connect("wss://tralis.sbahnm.geops.de:443/ws");
+    if(connected) {
+        Serial.println("Connecetd!");
+        client.send("GET timetable_8000261");
+        client.send("SUB timetable_8000261"); //Subscribe for Departures at Hauptbahnhof
+    } else {
+        Serial.println("Not Connected!");
+    }
+    
+    // run callback when messages are received
+    client.onMessage([&](websockets::WebsocketsMessage message){
+        Serial.println(message.data());
+
+        DeserializationError error = deserializeJson(doc, message.data());
+        if (error) {
+            Serial.print(F("deserializeJson() failed: "));
+            Serial.println(error.c_str());
+        } 
+        else 
+        {
+            Serial.println("No errors");
+            String final = doc["content"]["to"][0];
+            Serial.println(final);
+        } 
+    });
+}
+
+void handle_geops_api(Config config)
+{
+  if(client.available()) {
+        client.poll();
+    }
 }
