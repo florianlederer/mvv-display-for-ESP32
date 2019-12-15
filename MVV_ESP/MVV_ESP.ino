@@ -38,11 +38,11 @@ typedef struct {
   unsigned long long estimated_time;
   String line;
   String destination; 
-  int track; 
+  int platform; 
   int wagon; 
-} Depature;
+} Departure;
 
-Depature depature_array[100];
+Departure departure_array[100];
 
 websockets::WebsocketsClient client;
 
@@ -282,7 +282,7 @@ void init_geops_api()
     // run callback when messages are received
     client.onMessage([&](websockets::WebsocketsMessage message){
         Serial.println(message.data());
-
+        Serial.println("Parsing JSON...");
         DeserializationError error = deserializeJson(doc, message.data());
         if (error) {
             Serial.print(F("deserializeJson() failed: "));
@@ -291,8 +291,20 @@ void init_geops_api()
         else 
         {
             Serial.println("No errors");
-            String final = doc["content"]["to"][0];
-            Serial.println(final);
+            Departure recived_departure; 
+            recived_departure.aimed_time = doc["content"]["ris_aimed_time"].as<long long>();
+            recived_departure.estimated_time = doc["content"]["ris_estimated_time"].as<long long>();
+            recived_departure.line = doc["content"]["line"]["name"].as<String>();
+            recived_departure.destination = doc["content"]["to"][0].as<String>();
+            recived_departure.platform = doc["content"]["platform"].as<int>();
+            recived_departure.wagon = doc["content"]["train_type"].as<int>();
+            Serial.println((unsigned long)recived_departure.aimed_time/1000);
+            Serial.println((unsigned long)recived_departure.estimated_time/1000);
+            Serial.println(recived_departure.line);
+            Serial.println(recived_departure.destination);
+            Serial.println(recived_departure.platform);
+            Serial.println(recived_departure.wagon);
+            
         } 
     });
 }
