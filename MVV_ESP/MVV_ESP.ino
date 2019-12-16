@@ -300,8 +300,7 @@ void init_geops_api()
       {
         Departure received_departure;
         received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>();
-        unsigned long long estimated_time = doc["content"]["ris_estimated_time"].as<double>();
-        received_departure.estimated_time = estimated_time ? estimated_time : received_departure.aimed_time;
+        received_departure.estimated_time =  doc["content"]["time"].as<double>();
         received_departure.line = doc["content"]["line"]["name"].as<String>();
         received_departure.destination = doc["content"]["to"][0].as<String>();
         received_departure.platform = doc["content"]["platform"].as<int>();
