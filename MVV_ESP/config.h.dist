@@ -1,0 +1,29 @@
+static const Config configs[] = {
+    {
+        /* wifi_name           */ "foo",
+        /* wifi_pass           */ "bar",
+        /* type                */ mvg_api,
+        /* bahnhof             */ "de:09162:2", //Marienplatz
+	/* include_type        */ {"*" },
+        /* include_line        */ { "U3", "U6" },
+        /* exclude_destination */ { "Feldmoching" },
+    },
+    {
+        /* wifi_name           */ "top",
+        /* wifi_pass           */ "secret",
+        /* type                */ geops_api,
+        /* bahnhof             */ "8000261", //Hauptbahnhof
+	/* include_type        */ {"*" },
+        /* include_line        */ { "*" },
+        /* exclude_destination */ {  },
+    },
+    {
+        /* wifi_name           */ "work",
+        /* wifi_pass           */ "secret",
+        /* type                */ mvg_api,
+        /* bahnhof             */ "de:09162:2", //Marienplatz
+	/* include_type        */ {"*" },
+        /* include_line        */ { "U2", "S2", "U6" },
+        /* exclude_destination */ { },
+    },
+};
