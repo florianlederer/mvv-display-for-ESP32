@@ -20,6 +20,7 @@ using namespace std;
 #define MAX_INCLUDE_LINE 10
 #define MAX_EXCLUDE_DESTINATION 10
 #define MAX_JSON_DOCUMENT 20000
+#define MAX_DEPARTURE_LIST_LENGTH 100
 
 enum types {
   mvg_api,
@@ -299,7 +300,7 @@ void init_geops_api()
       if (doc["source"] == "timetable_8000261")
       {
         Departure received_departure;
-        received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>();
+        received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>(); 
         received_departure.estimated_time =  doc["content"]["time"].as<double>();
         received_departure.line = doc["content"]["line"]["name"].as<String>();
         received_departure.destination = doc["content"]["to"][0].as<String>();
@@ -335,7 +336,7 @@ void init_geops_api()
               departure_list.sort([](const Departure & a, const Departure & b) { return a.estimated_time < b.estimated_time; });
               break;
             }
-            if ( next(it1, 1) == departure_list.end()) //Departure nicht vorhanden
+            if ( next(it1, 1) == departure_list.end() && departure_list.size() < MAX_DEPARTURE_LIST_LENGTH) //Departure nicht vorhanden
             {
               Serial.println("Departure nicht vorhanden");
               list<Departure>::iterator it2;
@@ -394,11 +395,11 @@ void handle_geops_api(Config config)
     
     if (it != departure_list.end())
     {
-      Serial.print(it->line);
-      Serial.print("\t");
-      Serial.print(it->destination);
-      Serial.print("\t");
-      Serial.println(minutes);
+      // Serial.print(it->line);
+      // Serial.print("\t");
+      // Serial.print(it->destination);
+      // Serial.print("\t");
+      // Serial.println(minutes);
       drawDeparture(cnt, it->line, it->destination, 0, 0, minutes);
     }
     ++cnt;
