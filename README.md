@@ -1,6 +1,8 @@
 # mvv display for ESP32
 Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es handelt sich hierbei um kein Projekt der MVV.
 
+![github-small](images/mvv_display_U2_Königsplatz.jpg)
+
 ## Benötigtes:
 - ESP32 mit OLED Display: https://www.amazon.de/dp/B076P8GRWV/
 - Micro USB Kabel
