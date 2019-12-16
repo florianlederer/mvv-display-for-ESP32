@@ -32,7 +32,7 @@ typedef struct {
   const char *wifi_name;
   const char *wifi_pass;
   const enum types type;
-  const char *url;
+  const char *bahnhof;
   const char *include_type[MAX_INCLUDE_TYPE];
   const char *include_line[MAX_INCLUDE_LINE];
   const char *exclude_destinations[MAX_EXCLUDE_DESTINATION];
@@ -66,7 +66,7 @@ int connect_wifi();
 void setup_display();
 void handle_mvg_api(Config config);
 void drawDeparture(int display_line, const char * line, const char * destination, int track, int wagon, int minutes);
-void init_geops_api();
+void init_geops_api(Config config);
 void handle_geops_api(Config config);
 
 void setup() {
@@ -158,8 +158,8 @@ void setup_display()
 void handle_mvg_api(Config config)
 {
   HTTPClient http;
-
-  http.begin(config.url);
+  String url = "https://www.mvg.de/api/fahrinfo/departure/" + String(config.bahnhof) + "?footway=0";
+  http.begin(url);
   int httpResponseCode = http.GET();
 
   if (httpResponseCode > 0) {
@@ -239,7 +239,7 @@ void handle_mvg_api(Config config)
             unsigned long wait = departure - now;
             Serial.println(wait);
             minutes = wait / 60;
-            if (wait % 60 > 30) ++minutes;
+            //if (wait % 60 > 30) ++minutes;
             minutes +=  doc["departures"][i]["delay"].as<int>();
           }
           Serial.println(minutes);
