@@ -373,27 +373,37 @@ void handle_geops_api(Config config)
   time(&now);
 
   Serial.println("New List");
+  display.clear();
   list <Departure> :: iterator it;
-  for (it = departure_list.begin(); it != departure_list.end(); ++it)
+  it = departure_list.begin();
+  int cnt = 0;
+  while ( !departure_list.empty() && it != departure_list.end() && cnt < 4)
   {
-  unsigned long estimated_time_s = it->estimated_time/1000;
-  unsigned long minutes = 0;
-  
-      if (estimated_time_s > now) 
-      {
-        unsigned long wait = estimated_time_s - now;
-        minutes = wait / 60;
-        //if (wait % 60 > 30) ++minutes;
-      }
-      else if(estimated_time_s + 30 < now) //abfahrt seit über 30s vorbei => aus der liste entfernen
-      {
-        departure_list.erase (it);
-      }
+    unsigned long estimated_time_s = it->estimated_time/1000;
+    unsigned long minutes = 0;
 
-    Serial.print(it->line);
-    Serial.print("\t");
-    Serial.print(it->destination);
-    Serial.print("\t");
-    Serial.println(minutes);
+    if (estimated_time_s > now) 
+    {
+      unsigned long wait = estimated_time_s - now;
+      minutes = wait / 60;
+      //if (wait % 60 > 30) ++minutes;
+    }
+    else //abfahrt in der vergangenheit => aus der liste entfernen
+    {
+      departure_list.erase (it);
+    }
+    
+    if (it != departure_list.end())
+    {
+      Serial.print(it->line);
+      Serial.print("\t");
+      Serial.print(it->destination);
+      Serial.print("\t");
+      Serial.println(minutes);
+      drawDeparture(cnt, it->line, it->destination, 0, 0, minutes);
+    }
+    ++cnt;
+    ++it;
   }
+  display.display();
 }
