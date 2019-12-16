@@ -86,7 +86,7 @@ void setup() {
     case mvg_api:
       break;
     case geops_api:
-      init_geops_api();
+      init_geops_api(loaded_config);
       break;
     default:
       Serial.println("Unkown config type");
@@ -274,13 +274,13 @@ void drawDeparture(int display_line, String line, String destination, int track,
   display.drawString( 128, display_line * 16, String(minutes));
 }
 
-void init_geops_api()
+void init_geops_api(Config config)
 {
   bool connected = client.connect("wss://tralis.sbahnm.geops.de:443/ws");
   if (connected) {
     Serial.println("Connecetd!");
-    client.send("GET timetable_8000261");
-    client.send("SUB timetable_8000261"); //Subscribe for Departures at Hauptbahnhof
+    client.send("GET timetable_" + String(config.bahnhof));
+    client.send("SUB timetable_" + String(config.bahnhof)); //Subscribe for Departures at Hauptbahnhof
   } else {
     Serial.println("Not Connected!");
   }
@@ -297,7 +297,7 @@ void init_geops_api()
     else
     {
       Serial.println("No errors");
-      if (doc["source"] == "timetable_8000261")
+      if (doc["source"] == ("timetable_" + String(config.bahnhof)))
       {
         Departure received_departure;
         received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>(); 
