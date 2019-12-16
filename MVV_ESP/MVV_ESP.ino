@@ -315,7 +315,6 @@ void init_geops_api()
         Serial.println(received_departure.platform);
         Serial.println(received_departure.wagon);
         */
-
         if (departure_list.empty())
         {
           Serial.println("EMPTY");
@@ -324,17 +323,20 @@ void init_geops_api()
         else
         {
           Serial.println("Not empty");
-          list<Departure>::iterator it;
-          for (it = departure_list.begin(); it != departure_list.end(); ++it)
+          list<Departure>::iterator it1;
+          for (it1 = departure_list.begin(); it1 != departure_list.end(); ++it1)
           { 
             Serial.println("For loop");
-            if (it->aimed_time == received_departure.aimed_time && it->line == received_departure.line && it->destination == received_departure.destination) //Departure schon vorhanden => Update
+
+            if (it1->aimed_time == received_departure.aimed_time && it1->line == received_departure.line && it1->destination == received_departure.destination) //Departure schon vorhanden => Update
             {
               Serial.println("Update");
-              *it = received_departure;
+              *it1 = received_departure;
+              //Sorting to be sure we are sill in correct order
+              departure_list.sort([](const Departure & a, const Departure & b) { return a.estimated_time < b.estimated_time; });
               break;
             }
-            if ( next(it, 1) == departure_list.end()) //Departure nicht vorhanden
+            if ( next(it1, 1) == departure_list.end()) //Departure nicht vorhanden
             {
               Serial.println("Departure nicht vorhanden");
               list<Departure>::iterator it2;
@@ -350,12 +352,12 @@ void init_geops_api()
                 {
                   Serial.println("Departure push_back");
                   departure_list.push_back(received_departure);
-                  break; //really needed??? it2 and it shoudld stop for loops in the next step...
+                  break; //needed cause otherwise it2 != departure_list.end() will never be true
                 }
               }
             }
-          }
-        }
+          }  
+        }  
       }
     }
   });
@@ -366,14 +368,32 @@ void handle_geops_api(Config config)
   if (client.available()) {
     client.poll();
   }
+
+  time_t now;
+  time(&now);
+
   Serial.println("New List");
   list <Departure> :: iterator it;
   for (it = departure_list.begin(); it != departure_list.end(); ++it)
   {
-    Serial.print((unsigned long)(it->estimated_time / 1000));
-    Serial.print("\t");
+  unsigned long estimated_time_s = it->estimated_time/1000;
+  unsigned long minutes = 0;
+  
+      if (estimated_time_s > now) 
+      {
+        unsigned long wait = estimated_time_s - now;
+        minutes = wait / 60;
+        //if (wait % 60 > 30) ++minutes;
+      }
+      else if(estimated_time_s + 30 < now) //abfahrt seit über 30s vorbei => aus der liste entfernen
+      {
+        departure_list.erase (it);
+      }
+
     Serial.print(it->line);
     Serial.print("\t");
-    Serial.println(it->destination);
+    Serial.print(it->destination);
+    Serial.print("\t");
+    Serial.println(minutes);
   }
 }
