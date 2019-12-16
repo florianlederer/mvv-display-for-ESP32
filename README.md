@@ -28,7 +28,7 @@ Zeigt die nächsten Abfahrten der MVV auf einem kleinem OLED Display an. Es hand
     1. Werte für include_type, include_lines und exclude_destinations können dem JSON der API entnommen werden
 1. Sketch -> Verify/Compile und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
 1. Sketch -> Upload
-1. Nach spätestens 30 Sekunden sollten auf dem Display die aktuellen Abfahrten angezeigt werden.
+1. Nach kurzer Zeit sollten auf dem Display die aktuellen Abfahrten angezeigt werden.
 1. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden.
 
 ## API:
