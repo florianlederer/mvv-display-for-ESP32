@@ -94,6 +94,7 @@ int connect_wifi();
 void handle_mvg_api(Config config);
 void init_geops_api(Config config);
 void handle_geops_api(Config config);
+void ping_geops_api();
 
 //! Long time delay, it is recommended to use shallow sleep, which can effectively reduce the current consumption
 void espDelay(int ms)
@@ -217,7 +218,13 @@ void loop() {
         handle_mvg_api(loaded_config);
         break;
       case geops_api:
+        static unsigned long last_time = 0;
         handle_geops_api(loaded_config);
+        if(millis() > last_time + 10000)
+        {
+          last_time = millis();
+          ping_geops_api();     
+        }
         break;
       default:
         Serial.println("Unkown config type");
@@ -226,6 +233,7 @@ void loop() {
   else
   {
     Serial.println("Error in WiFi connection");
+    setup();
   }
 }
 
@@ -372,6 +380,21 @@ void init_geops_api(Config config)
     Serial.println("Not Connected!");
   }
 
+
+  client.onEvent([&](websockets::WebsocketsEvent event, String data) {
+        if(event == websockets::WebsocketsEvent::ConnectionOpened) {
+        Serial.println("Connnection Opened");
+    } else if(event == websockets::WebsocketsEvent::ConnectionClosed) {
+        Serial.println("Connnection Closed");
+        Config loaded_config = configs[config_number];
+        init_geops_api(loaded_config);
+    } else if(event == websockets::WebsocketsEvent::GotPing) {
+        Serial.println("Got a Ping!");
+    } else if(event == websockets::WebsocketsEvent::GotPong) {
+        Serial.println("Got a Pong!");
+    }
+  });
+  
   // run callback when messages are received
   client.onMessage([&](websockets::WebsocketsMessage message) {
     Serial.println(message.data());
@@ -459,7 +482,7 @@ void handle_geops_api(Config config)
   time_t now;
   time(&now);
 
-  Serial.println("New List");
+  //Serial.println("New List");
   img.fillSprite(0x005);
   drawTopLine();
   list <Departure> :: iterator it;
@@ -494,4 +517,10 @@ void handle_geops_api(Config config)
     ++it;
   }
   img.pushSprite(0, 0);
+}
+
+void ping_geops_api()
+{
+  client.send("PING");
+  Serial.println("Send Ping");
 }
