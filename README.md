@@ -38,9 +38,9 @@ Diese API kommt unter anderem in der München Navigator APP oder auf s-bahn-muen
 In jedem Zug befindet sich eine Art GPS Tracker. Circa alle 10 Sekunden werden die aktuellen GPS-Koordinaten sowie Informationen zum  Zuglauf und zum Status von jeder aktiven Sbahn an einen Server verschickt. Diese Daten werden ausgewertet und die daraus berechneten Abfahrtszeiten sowie die Zugpositionen auf der MVV-Netzkarte über die API verbereitet. 
 
 ### Server
-URL                             | Port     | Protokoll
---------------------------------| -------- | --------
-wss://tralis.sbahnm.geops.de/ws | 443      | Websocket
+URL                                                                                             | Port     | Protokoll
+------------------------------------------------------------------------------------------------| -------- | --------
+wss://api.geops.io/realtime-ws/v1/?key=5cc87b12d7c5370001c1d655306122aa0a4743c489b497cb1afbec9b | 443      | Websocket
 
 ### Kommandos
 Die Kommandos die an den Server geschickt werden sind in der redis-websocket-api definiert. Die wichtigesten Kommandos für dieses Projekt mit ihren Keys sind hier aufgelistet: 
