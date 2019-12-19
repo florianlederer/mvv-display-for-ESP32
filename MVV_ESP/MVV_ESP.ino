@@ -151,8 +151,11 @@ void drawDeparture(int display_line, String line, String destination, int track,
   img.drawString(destination.substring(0, 11), 32, y_display);
 
   //track 
-  sprintf(str_buffer, "%u", track);
-  img.drawString(str_buffer, 150, y_display);
+  if(track !=0)
+  {
+    sprintf(str_buffer, "%u", track);
+    img.drawString(str_buffer, 150, y_display);
+  }
 
   //wagon
   if(wagon == 1 || wagon == 2 || wagon == 3) img.drawString("_ _ _", 167, y_display);
@@ -279,13 +282,13 @@ void handle_mvg_api(Config config)
       time(&now);
       Serial.println(now);
 
-      tft.fillScreen(0x005);
+      img.fillSprite(0x005);
       drawTopLine();
       unsigned int departures_length = doc["departures"].size();
       unsigned int i = 0;
       unsigned int cnt = 0;
 
-      while (i < departures_length && cnt < 4) {
+      while (i < departures_length && cnt < 8) {
         // Extract what we are interested in from response
         // based on config
         bool interesting_type = false;
@@ -342,12 +345,13 @@ void handle_mvg_api(Config config)
           }
           Serial.println(minutes);
 
-          drawDeparture(cnt, doc["departures"][i]["label"].as<String>(), doc["departures"][i]["destination"].as<String>(), 0, 0, minutes);
+          drawDeparture(cnt, doc["departures"][i]["label"].as<String>(), doc["departures"][i]["destination"].as<String>(), doc["departures"][i]["platform"].as<int>(), 0, minutes);
 
           ++cnt;
         }
         ++i;
       }
+      img.pushSprite(0, 0);
     }
   } else {
     Serial.print("Error: Couldn't send GET: ");
