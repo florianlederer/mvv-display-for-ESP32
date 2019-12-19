@@ -150,12 +150,12 @@ void drawDeparture(int display_line, String line, String destination, int track,
   img.setTextColor(TFT_WHITE);
   img.drawString(destination.substring(0, 11), 32, y_display);
 
-  //track
+  //track 
   sprintf(str_buffer, "%u", track);
   img.drawString(str_buffer, 150, y_display);
 
   //wagon
-  img.drawString("_ _ _", 167, y_display);
+  if(wagon == 1 || wagon == 2 || wagon == 3) img.drawString("_ _ _", 167, y_display);
   switch(wagon)
   {
     case 3:
