@@ -104,7 +104,8 @@ void espDelay(int ms)
 }
 
 void drawTopLine()
-{ 
+{   
+    img.setTextDatum(TL_DATUM);
     img.fillRect(0, 0, 240, 8,TFT_YELLOW);
     img.setTextFont(GLCD);
     img.setTextColor(0x005, TFT_YELLOW);
