@@ -12,7 +12,7 @@ static const Config configs[] = {
         /* wifi_name           */ "top",
         /* wifi_pass           */ "secret",
         /* type                */ geops_api,
-        /* bahnhof             */ "8000261", //Hauptbahnhof
+        /* bahnhof             */ "8098263", //Hauptbahnhof
 	/* include_type        */ {"*" },
         /* include_line        */ { "*" },
         /* exclude_destination */ {  },

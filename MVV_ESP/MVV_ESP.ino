@@ -276,7 +276,7 @@ void drawDeparture(int display_line, String line, String destination, int track,
 
 void init_geops_api(Config config)
 {
-  bool connected = client.connect("wss://tralis.sbahnm.geops.de:443/ws");
+  bool connected = client.connect("wss://api.geops.io:443/realtime-ws/v1/?key=5cc87b12d7c5370001c1d655306122aa0a4743c489b497cb1afbec9b");
   if (connected) {
     Serial.println("Connecetd!");
     client.send("GET timetable_" + String(config.bahnhof));
@@ -301,7 +301,7 @@ void init_geops_api(Config config)
       {
         Departure received_departure;
         received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>(); 
-        received_departure.estimated_time =  doc["content"]["time"].as<double>();
+        received_departure.estimated_time = doc["content"]["time"].as<double>();
         received_departure.line = doc["content"]["line"]["name"].as<String>();
         received_departure.destination = doc["content"]["to"][0].as<String>();
         received_departure.platform = doc["content"]["platform"].as<int>();
