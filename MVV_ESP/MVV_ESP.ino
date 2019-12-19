@@ -355,7 +355,7 @@ void handle_mvg_api(Config config)
 
 void init_geops_api(Config config)
 {
-  bool connected = client.connect("wss://tralis.sbahnm.geops.de:443/ws");
+  bool connected = client.connect("wss://api.geops.io:443/realtime-ws/v1/?key=5cc87b12d7c5370001c1d655306122aa0a4743c489b497cb1afbec9b");
   if (connected) {
     Serial.println("Connecetd!");
     client.send("GET timetable_" + String(config.bahnhof));
