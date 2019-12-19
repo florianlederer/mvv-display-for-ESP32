@@ -52,9 +52,9 @@ GET healthcheck       | Auskunft über den Serverstatus
 GET newsticker        | Liefert Zusatzmeldungen 
 GET trajectory        | Liefert Live Infos zu allen aktiven Sbahnen (z.B. GPS Koordinaten)
 GET station           | Liefert Infos zu allen Bahnöfen. (z.B. uic Nummer)
-GET timetable_8000261 | Liefert die aktuellen Abfahrtzeiten am Hauptbahnhof (uic=8000261)
-SUB timetable_8000261 | Abboniert die Abfahrtzeiten am Hauptbahnhof (uic=8000261)
-DEL timetable_8000261 | Deabboniert die Abfahrtzeiten am Hauptbahnhof (uic=8000261)
+GET timetable_8098263 | Liefert die aktuellen Abfahrtzeiten am Hauptbahnhof (uic=8098263)
+SUB timetable_8098263 | Abboniert die Abfahrtzeiten am Hauptbahnhof (uic=8098263)
+DEL timetable_8098263 | Deabboniert die Abfahrtzeiten am Hauptbahnhof (uic=8098263)
 
 Während GET einmalig die nächsten Abfahrten liefert, bekommt der Client mit SUB immer automatisch eine Aktualisierung. Die uid Bahnhofsnummer ist nicht identisch mit der id der MVG API. Der Server antwortet immer im JSON Format. 
 
