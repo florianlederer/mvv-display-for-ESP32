@@ -80,6 +80,7 @@ list <Departure> departure_list;
 websockets::WebsocketsClient client;
 
 TFT_eSPI tft = TFT_eSPI(135, 240); // Invoke custom library
+TFT_eSprite img = TFT_eSprite(&tft);
 
 StaticJsonDocument<MAX_JSON_DOCUMENT> doc;
 
@@ -104,16 +105,16 @@ void espDelay(int ms)
 
 void drawTopLine()
 { 
-    tft.fillRect(0, 0, 240, 8,TFT_YELLOW);
-    tft.setTextFont(GLCD);
-    tft.setTextColor(0x005, TFT_YELLOW);
-    tft.drawString("Linie", 1, 0);
-    tft.drawString("Ziel", 33, 0);
-    tft.drawString("Gleis", 128, 0);
-    tft.drawString("A", 169, 0);
-    tft.drawString("B", 184, 0);
-    tft.drawString("C", 200, 0);
-    tft.drawString("Min", 220, 0);
+    img.fillRect(0, 0, 240, 8,TFT_YELLOW);
+    img.setTextFont(GLCD);
+    img.setTextColor(0x005, TFT_YELLOW);
+    img.drawString("Linie", 1, 0);
+    img.drawString("Ziel", 33, 0);
+    img.drawString("Gleis", 128, 0);
+    img.drawString("A", 169, 0);
+    img.drawString("B", 184, 0);
+    img.drawString("C", 200, 0);
+    img.drawString("Min", 220, 0);
 }
 
 void setup_display()
@@ -125,6 +126,8 @@ void setup_display()
          pinMode(TFT_BL, OUTPUT); // Set backlight pin to output mode
          digitalWrite(TFT_BL, TFT_BACKLIGHT_ON); // Turn backlight on. TFT_BACKLIGHT_ON has been set in the TFT_eSPI library in the User Setup file TTGO_T_Display.h
     }
+    img.createSprite(240, 135);
+    img.fillSprite(0x005);
 }
 
 void drawDeparture(int display_line, String line, String destination, int track, int wagon, int minutes)
@@ -134,40 +137,40 @@ void drawDeparture(int display_line, String line, String destination, int track,
   int offset = 9;
   int y_display = display_line*line_height+offset;
     
-  tft.setFreeFont(FF17);
-  tft.setTextDatum(TL_DATUM);
+  img.setFreeFont(FF17);
+  img.setTextDatum(TL_DATUM);
 
   //line
-  tft.fillRoundRect(0, y_display, 28, 15, 7,TFT_MAGENTA);
-  tft.setTextColor(0x005);
-  tft.drawString(line, 3, y_display); 
+  img.fillRoundRect(0, y_display, 28, 15, 7,TFT_MAGENTA);
+  img.setTextColor(0x005);
+  img.drawString(line, 3, y_display); 
 
   //destination
-  tft.setTextColor(TFT_WHITE);
-  tft.drawString(destination.substring(0, 11), 32, y_display);
+  img.setTextColor(TFT_WHITE);
+  img.drawString(destination.substring(0, 11), 32, y_display);
 
   //track
   sprintf(str_buffer, "%u", track);
-  tft.drawString(str_buffer, 150, y_display);
+  img.drawString(str_buffer, 150, y_display);
 
   //wagon
-  tft.drawString("_ _ _", 167, y_display);
+  img.drawString("_ _ _", 167, y_display);
   switch(wagon)
   {
     case 3:
-      tft.fillRoundRect(195, y_display+4, 14, 11, 3,TFT_WHITE); //rechts
+      img.fillRoundRect(195, y_display+4, 14, 11, 3,TFT_WHITE); //rechts
     case 2:
-      tft.fillRoundRect(165, y_display+4, 14, 11, 3,TFT_WHITE); //links
+      img.fillRoundRect(165, y_display+4, 14, 11, 3,TFT_WHITE); //links
     case 1:
-      tft.fillRoundRect(180, y_display+4, 14, 11, 3,TFT_WHITE); //mitte
+      img.fillRoundRect(180, y_display+4, 14, 11, 3,TFT_WHITE); //mitte
       default:
         break;
   }
 
   //minutes
-  tft.setTextDatum(TR_DATUM);
+  img.setTextDatum(TR_DATUM);
   sprintf(str_buffer, "%u", minutes);
-  tft.drawString(str_buffer, 240,y_display);
+  img.drawString(str_buffer, 240,y_display);
   
 }
 
@@ -452,7 +455,7 @@ void handle_geops_api(Config config)
   time(&now);
 
   Serial.println("New List");
-  tft.fillScreen(0x005);
+  img.fillSprite(0x005);
   drawTopLine();
   list <Departure> :: iterator it;
   it = departure_list.begin();
@@ -485,4 +488,5 @@ void handle_geops_api(Config config)
     ++cnt;
     ++it;
   }
+  img.pushSprite(0, 0);
 }
