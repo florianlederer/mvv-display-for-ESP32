@@ -210,8 +210,8 @@ void setup()
 
 
 void loop() {
+  Config loaded_config = configs[config_number];
   if (WiFi.status() == WL_CONNECTED) {
-    Config loaded_config = configs[config_number];
     switch (loaded_config.type)
     {
       case mvg_api:
@@ -233,7 +233,13 @@ void loop() {
   else
   {
     Serial.println("Error in WiFi connection");
-    setup();
+    Serial.println("Try to Reconnect WiFi");
+    WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+    WiFi.mode(WIFI_STA);
+      while (config_number == -1) {
+    config_number = connect_wifi();
+      }
   }
 }
 
@@ -243,6 +249,7 @@ int connect_wifi()
   if (number_of_networks == -1 ) {
     Serial.println("No networks available");
   }
+  int wifi_retry = 0;
   for (int i = 0; i < number_of_networks; ++i) {
     String ssid = WiFi.SSID(i);
     // is this network in config...?
@@ -250,12 +257,27 @@ int connect_wifi()
       if (strcmp(ssid.c_str(), configs[j].wifi_name) == 0) {
         // ... yes it is
         WiFi.begin(configs[j].wifi_name, configs[j].wifi_pass);
-        while (WiFi.status() != WL_CONNECTED) {
-          delay(1000);
+        delay(1000);
+        while (WiFi.status() != WL_CONNECTED  && wifi_retry < 5 ) {
+          ++wifi_retry;
+          Serial.println("WiFi not connected. Try to reconnect");
+          WiFi.disconnect();
+          WiFi.mode(WIFI_OFF);
+          WiFi.mode(WIFI_STA);
+          WiFi.begin(configs[j].wifi_name, configs[j].wifi_pass);
           Serial.println("Connecting to WiFi...");
+          delay(1000);
         }
-        Serial.printf("Connected to the WiFi network: %s\n", ssid.c_str());
-        return j;
+        if(wifi_retry >= 5) 
+        {
+          Serial.println("\nReboot");
+          ESP.restart();
+        }
+        else
+        {
+          Serial.printf("Connected to the WiFi network: %s\n", ssid.c_str());
+          return j;
+        }
       }
     }
   }
@@ -386,8 +408,8 @@ void init_geops_api(Config config)
         Serial.println("Connnection Opened");
     } else if(event == websockets::WebsocketsEvent::ConnectionClosed) {
         Serial.println("Connnection Closed");
-        Config loaded_config = configs[config_number];
-        init_geops_api(loaded_config);
+        // Config loaded_config = configs[config_number];
+        // init_geops_api(loaded_config);
     } else if(event == websockets::WebsocketsEvent::GotPing) {
         Serial.println("Got a Ping!");
     } else if(event == websockets::WebsocketsEvent::GotPong) {
@@ -407,7 +429,10 @@ void init_geops_api(Config config)
     else
     {
       Serial.println("No errors");
-      if (doc["source"] == ("timetable_" + String(config.bahnhof)))
+      Serial.print("Cheking for ");
+      Config loaded_config = configs[config_number];
+      Serial.println(String(loaded_config.bahnhof));
+      if (doc["source"] == ("timetable_" + String(loaded_config.bahnhof)))
       {
         Departure received_departure;
         received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>(); 
@@ -521,6 +546,16 @@ void handle_geops_api(Config config)
 
 void ping_geops_api()
 {
-  client.send("PING");
-  Serial.println("Send Ping");
+  if(client.available())
+  {
+    client.send("PING");
+    Serial.println("Send Ping");
+  }
+  else
+  { 
+    Serial.println("Try to Reconnect geops!");
+    Config loaded_config = configs[config_number];
+    init_geops_api(loaded_config);
+  }
+  
 }
