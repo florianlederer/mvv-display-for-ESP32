@@ -249,6 +249,7 @@ int connect_wifi()
   if (number_of_networks == -1 ) {
     Serial.println("No networks available");
   }
+  int wait = 0;
   int wifi_retry = 0;
   for (int i = 0; i < number_of_networks; ++i) {
     String ssid = WiFi.SSID(i);
@@ -257,7 +258,11 @@ int connect_wifi()
       if (strcmp(ssid.c_str(), configs[j].wifi_name) == 0) {
         // ... yes it is
         WiFi.begin(configs[j].wifi_name, configs[j].wifi_pass);
+        while (WiFi.status() != WL_CONNECTED  && wait < 5 )
+        {
         delay(1000);
+        ++wait;
+        }
         while (WiFi.status() != WL_CONNECTED  && wifi_retry < 5 ) {
           ++wifi_retry;
           Serial.println("WiFi not connected. Try to reconnect");
@@ -266,7 +271,7 @@ int connect_wifi()
           WiFi.mode(WIFI_STA);
           WiFi.begin(configs[j].wifi_name, configs[j].wifi_pass);
           Serial.println("Connecting to WiFi...");
-          delay(1000);
+          delay(5000);
         }
         if(wifi_retry >= 5) 
         {
