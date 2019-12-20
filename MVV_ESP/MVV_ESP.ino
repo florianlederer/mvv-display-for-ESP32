@@ -22,6 +22,7 @@ using namespace std;
 #include "WiFi.h"
 #include <Wire.h>
 #include "Free_Fonts.h" // Include the header file attached to this sketchtft.setFreeFont(FSB9);
+#include <Button2.h>
 
 #define MAX_INCLUDE_TYPE 10
 #define MAX_INCLUDE_LINE 10
@@ -82,6 +83,9 @@ websockets::WebsocketsClient client;
 TFT_eSPI tft = TFT_eSPI(135, 240); // Invoke custom library
 TFT_eSprite img = TFT_eSprite(&tft);
 
+Button2 btn1(BUTTON_1);
+Button2 btn2(BUTTON_2);
+
 StaticJsonDocument<MAX_JSON_DOCUMENT> doc;
 
 const char* ntpServer = "pool.ntp.org";
@@ -95,6 +99,36 @@ void handle_mvg_api(Config config);
 void init_geops_api(Config config);
 void handle_geops_api(Config config);
 void ping_geops_api();
+
+void button_init()
+{
+    btn1.setPressedHandler([](Button2 & b) {
+        Serial.println("btn2 pressed");
+        int r = digitalRead(TFT_BL);
+        tft.fillScreen(TFT_BLACK);
+        tft.setTextColor(TFT_GREEN, TFT_BLACK);
+        tft.setTextDatum(MC_DATUM);
+        tft.drawString("Shutting down...",  tft.width() / 2, tft.height() / 2 );
+        delay(3000);
+        digitalWrite(TFT_BL, !r);
+
+        tft.writecommand(TFT_DISPOFF);
+        tft.writecommand(TFT_SLPIN); 
+        esp_sleep_enable_ext1_wakeup(GPIO_SEL_35, ESP_EXT1_WAKEUP_ALL_LOW);
+        esp_deep_sleep_start();
+        delay(100);
+    });
+
+    btn2.setPressedHandler([](Button2 & b) {
+        Serial.println("btn2 pressed");
+    });
+}
+
+void button_loop()
+{
+    btn1.loop();
+    btn2.loop();
+}
 
 //! Long time delay, it is recommended to use shallow sleep, which can effectively reduce the current consumption
 void espDelay(int ms)
@@ -185,6 +219,8 @@ void setup()
 
   setup_display();
 
+  button_init();
+
   delay(4000);   //Delay needed before calling the WiFi.begin
 
   while (config_number == -1) {
@@ -210,6 +246,7 @@ void setup()
 
 
 void loop() {
+  button_loop();
   Config loaded_config = configs[config_number];
   if (WiFi.status() == WL_CONNECTED) {
     switch (loaded_config.type)
