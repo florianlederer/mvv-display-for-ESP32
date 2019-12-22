@@ -177,7 +177,7 @@ void drawDeparture(int display_line, String line, String destination, int track,
   img.setTextDatum(TL_DATUM);
 
   //line
-  if(line[0]='S') //Sbahn
+  if(line[0]=='S') //Sbahn
   { 
     uint16_t rect_color = 0x005;
     uint16_t font_color = TFT_WHITE;
@@ -215,7 +215,6 @@ void drawDeparture(int display_line, String line, String destination, int track,
     default:
       break;
     }
-
     img.fillRoundRect(0, y_display, 28, 15, 7,rect_color);
     img.setTextColor(font_color);
     img.drawString(line, 3, y_display); 
