@@ -268,7 +268,7 @@ void drawDeparture(int display_line, String line, String destination, int track,
     }
      if( !(line[1]=='7' || line[1]=='8')) //line U1-U6
      {
-       img.fillRect(1, y_display, 28, 15, rect_color);
+       img.fillRect(1, y_display+1, 28, 14, rect_color);
      }
     img.setTextColor(font_color);
     img.drawString(line, 3, y_display_string); 
@@ -279,11 +279,17 @@ void drawDeparture(int display_line, String line, String destination, int track,
     img.drawString(line, 3, y_display_string); 
   }
   
-  
   //destination
   img.setTextColor(TFT_WHITE);
-  img.drawString(destination.substring(0, 11), 32, y_display_string);
-
+  if(track == 0 && wagon == 0)
+  {
+    img.drawString(destination.substring(0, 20), 32, y_display_string);
+  }
+  else
+  {
+    img.drawString(destination.substring(0, 11), 32, y_display_string);
+  }
+  
   //track 
   if(track !=0)
   {
