@@ -250,17 +250,22 @@ void drawDeparture(int display_line, String line, String destination, int track,
     break;
 
     case '7':
-      //TODO: draw two triangles
+      img.fillTriangle(28, y_display, 1, y_display, 1, y_display+14, 0x03E0); //Green Half
+      img.fillTriangle(1, y_display+14, 28, y_display, 28, y_display+14,0xE800); //Red Half
     break; 
 
     case '8':
-       //TODO: draw two triangles
+      img.fillTriangle(28, y_display, 1, y_display, 1, y_display+14, 0xE800); //Red Half
+      img.fillTriangle(1, y_display+14, 28, y_display, 28, y_display+14,TFT_ORANGE); //Orange Half
     break;
     
     default:
       break;
     }
-    img.fillRect(1, y_display, 28, 15, rect_color);
+     if( !(line[1]=='7' || line[1]=='8')) //line U1-U6
+     {
+       img.fillRect(1, y_display, 28, 15, rect_color);
+     }
     img.setTextColor(font_color);
     img.drawString(line, 3, y_display); 
   }
