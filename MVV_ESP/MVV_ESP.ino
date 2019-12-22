@@ -68,6 +68,7 @@ void handle_mvg_api(Config config);
 void drawDeparture(int display_line, const char * line, const char * destination, int track, int wagon, int minutes);
 void init_geops_api(Config config);
 void handle_geops_api(Config config);
+void ping_geops_api();
 
 void setup() {
 
@@ -105,21 +106,37 @@ void loop() {
         handle_mvg_api(loaded_config);
         break;
       case geops_api:
+        static unsigned long last_time = 0;
         handle_geops_api(loaded_config);
+        if(millis() > last_time + 10000)
+        {
+          last_time = millis();
+          ping_geops_api();     
+        }
         break;
       default:
         Serial.println("Unkown config type");
     }
   } else {
     Serial.println("Error in WiFi connection");
+    Serial.println("Try to Reconnect WiFi");
+    WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+    WiFi.mode(WIFI_STA);
+      while (config_number == -1) {
+    config_number = connect_wifi();
+      }
   }
 }
 
-int connect_wifi() {
+int connect_wifi()
+{
   int number_of_networks = WiFi.scanNetworks();
   if (number_of_networks == -1 ) {
     Serial.println("No networks available");
   }
+  int wait = 0;
+  int wifi_retry = 0;
   for (int i = 0; i < number_of_networks; ++i) {
     String ssid = WiFi.SSID(i);
     // is this network in config...?
@@ -127,12 +144,31 @@ int connect_wifi() {
       if (strcmp(ssid.c_str(), configs[j].wifi_name) == 0) {
         // ... yes it is
         WiFi.begin(configs[j].wifi_name, configs[j].wifi_pass);
-        while (WiFi.status() != WL_CONNECTED) {
-          delay(1000);
-          Serial.println("Connecting to WiFi...");
+        while (WiFi.status() != WL_CONNECTED  && wait < 5 )
+        {
+        delay(1000);
+        ++wait;
         }
-        Serial.printf("Connected to the WiFi network: %s\n", ssid.c_str());
-        return j;
+        while (WiFi.status() != WL_CONNECTED  && wifi_retry < 5 ) {
+          ++wifi_retry;
+          Serial.println("WiFi not connected. Try to reconnect");
+          WiFi.disconnect();
+          WiFi.mode(WIFI_OFF);
+          WiFi.mode(WIFI_STA);
+          WiFi.begin(configs[j].wifi_name, configs[j].wifi_pass);
+          Serial.println("Connecting to WiFi...");
+          delay(5000);
+        }
+        if(wifi_retry >= 5) 
+        {
+          Serial.println("\nReboot");
+          ESP.restart();
+        }
+        else
+        {
+          Serial.printf("Connected to the WiFi network: %s\n", ssid.c_str());
+          return j;
+        }
       }
     }
   }
@@ -267,7 +303,8 @@ void drawDeparture(int display_line, String line, String destination, int track,
   display.drawString( 128, display_line * 16, String(minutes));
 }
 
-void init_geops_api(Config config) {
+void init_geops_api(Config config)
+{
   bool connected = client.connect("wss://api.geops.io:443/realtime-ws/v1/?key=5cc87b12d7c5370001c1d655306122aa0a4743c489b497cb1afbec9b");
   if (connected) {
     Serial.println("Connecetd!");
@@ -277,6 +314,21 @@ void init_geops_api(Config config) {
     Serial.println("Not Connected!");
   }
 
+
+  client.onEvent([&](websockets::WebsocketsEvent event, String data) {
+        if(event == websockets::WebsocketsEvent::ConnectionOpened) {
+        Serial.println("Connnection Opened");
+    } else if(event == websockets::WebsocketsEvent::ConnectionClosed) {
+        Serial.println("Connnection Closed");
+        // Config loaded_config = configs[config_number];
+        // init_geops_api(loaded_config);
+    } else if(event == websockets::WebsocketsEvent::GotPing) {
+        Serial.println("Got a Ping!");
+    } else if(event == websockets::WebsocketsEvent::GotPong) {
+        Serial.println("Got a Pong!");
+    }
+  });
+  
   // run callback when messages are received
   client.onMessage([&](websockets::WebsocketsMessage message) {
     Serial.println(message.data());
@@ -285,18 +337,24 @@ void init_geops_api(Config config) {
     if (error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.c_str());
-    } else {
+    }
+    else
+    {
       Serial.println("No errors");
-      if (doc["source"] == ("timetable_" + String(config.bahnhof))) {
+      Serial.print("Cheking for ");
+      Config loaded_config = configs[config_number];
+      Serial.println(String(loaded_config.bahnhof));
+      if (doc["source"] == ("timetable_" + String(loaded_config.bahnhof)))
+      {
         Departure received_departure;
-        received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>();
-        received_departure.estimated_time = doc["content"]["time"].as<double>();
+        received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>(); 
+        received_departure.estimated_time =  doc["content"]["time"].as<double>();
         received_departure.line = doc["content"]["line"]["name"].as<String>();
         received_departure.destination = doc["content"]["to"][0].as<String>();
         received_departure.platform = doc["content"]["platform"].as<int>();
         received_departure.wagon = doc["content"]["train_type"].as<int>();
 
-        /*
+         /*
         Serial.println((unsigned long)(received_departure.aimed_time/1000.));
         Serial.println((unsigned long)(received_departure.estimated_time/1000.));
         Serial.println(received_departure.line);
@@ -304,46 +362,49 @@ void init_geops_api(Config config) {
         Serial.println(received_departure.platform);
         Serial.println(received_departure.wagon);
         */
-        if (departure_list.empty()) {
+        if (departure_list.empty())
+        {
           Serial.println("EMPTY");
           departure_list.push_back(received_departure);
-        } else {
+        }
+        else
+        {
           Serial.println("Not empty");
           list<Departure>::iterator it1;
-          for (it1 = departure_list.begin(); it1 != departure_list.end(); ++it1) {
+          for (it1 = departure_list.begin(); it1 != departure_list.end(); ++it1)
+          { 
             Serial.println("For loop");
 
-            if (it1->aimed_time == received_departure.aimed_time && it1->line == received_departure.line && it1->destination == received_departure.destination) {
-              // Departure schon vorhanden => Update
+            if (it1->aimed_time == received_departure.aimed_time && it1->line == received_departure.line && it1->destination == received_departure.destination) //Departure schon vorhanden => Update
+            {
               Serial.println("Update");
               *it1 = received_departure;
-              // Sorting to be sure we are sill in correct order
-              departure_list.sort([](const Departure & a, const Departure & b) {
-                  return a.estimated_time < b.estimated_time;
-              });
+              //Sorting to be sure we are sill in correct order
+              departure_list.sort([](const Departure & a, const Departure & b) { return a.estimated_time < b.estimated_time; });
               break;
             }
-            if (next(it1, 1) == departure_list.end() && departure_list.size() < MAX_DEPARTURE_LIST_LENGTH) {
-              // Departure nicht vorhanden
+            if ( next(it1, 1) == departure_list.end() && departure_list.size() < MAX_DEPARTURE_LIST_LENGTH) //Departure nicht vorhanden
+            {
               Serial.println("Departure nicht vorhanden");
               list<Departure>::iterator it2;
-              for (it2 = departure_list.begin(); it2 != departure_list.end(); ++it2) {
-                if (it2->estimated_time > received_departure.estimated_time) {
-                  // Element richtig einsortieren
+              for (it2 = departure_list.begin(); it2 != departure_list.end(); ++it2)
+              {
+                if (it2->estimated_time > received_departure.estimated_time) //Element richtig einsortieren
+                {
                   Serial.println("Departure insert");
                   departure_list.insert(it2, received_departure);
                   break;
                 }
-                if (next(it2,1) == departure_list.end()) {
-                  // Element ganz hinten einfügen da größter Wert
+                if (next(it2,1) == departure_list.end()) //Element ganz hinten einfügen da größter Wert
+                {
                   Serial.println("Departure push_back");
                   departure_list.push_back(received_departure);
                   break; //needed cause otherwise it2 != departure_list.end() will never be true
                 }
               }
             }
-          }
-        }
+          }  
+        }  
       }
     }
   });
@@ -358,7 +419,7 @@ void handle_geops_api(Config config)
   time_t now;
   time(&now);
 
-  Serial.println("New List");
+  //Serial.println("New List");
   display.clear();
   list <Departure> :: iterator it;
   it = departure_list.begin();
@@ -388,4 +449,20 @@ void handle_geops_api(Config config)
     ++it;
   }
   display.display();
+}
+
+void ping_geops_api()
+{
+  if(client.available())
+  {
+    client.send("PING");
+    Serial.println("Send Ping");
+  }
+  else
+  { 
+    Serial.println("Try to Reconnect geops!");
+    Config loaded_config = configs[config_number];
+    init_geops_api(loaded_config);
+  }
+  
 }
