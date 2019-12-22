@@ -177,10 +177,56 @@ void drawDeparture(int display_line, String line, String destination, int track,
   img.setTextDatum(TL_DATUM);
 
   //line
-  img.fillRoundRect(0, y_display, 28, 15, 7,TFT_MAGENTA);
-  img.setTextColor(0x005);
-  img.drawString(line, 3, y_display); 
+  if(line[0]='S') //Sbahn
+  { 
+    uint16_t rect_color = 0x005;
+    uint16_t font_color = TFT_WHITE;
+    switch (line[1])
+    {
+    case '1':
+      rect_color = 0x05FF;
+    break; 
+     
+    case '2':
+      rect_color = 0x05F0;
+    break;
 
+    case '3':
+      rect_color = TFT_MAGENTA;
+    break; 
+
+    case '4':
+      rect_color = 0xE800;
+      break;
+
+    case '6':
+      rect_color = 0x03E0;
+    break;
+
+    case '7':
+      rect_color = 0xB963;
+    break; 
+
+    case '8':
+      rect_color = TFT_BLACK;
+      font_color = TFT_YELLOW;
+    break;
+    
+    default:
+      break;
+    }
+
+    img.fillRoundRect(0, y_display, 28, 15, 7,rect_color);
+    img.setTextColor(font_color);
+    img.drawString(line, 3, y_display); 
+  }
+  else //default
+  {
+    img.setTextColor(TFT_WHITE);
+    img.drawString(line, 3, y_display); 
+  }
+  
+  
   //destination
   img.setTextColor(TFT_WHITE);
   img.drawString(destination.substring(0, 11), 32, y_display);
