@@ -4,7 +4,7 @@ static const Config configs[] = {
         /* wifi_pass           */ "bar",
         /* type                */ mvg_api,
         /* bahnhof             */ "de:09162:2", //Marienplatz
-	/* include_type        */ {"*" },
+        /* include_type        */ {"*" },
         /* include_line        */ { "U3", "U6" },
         /* exclude_destination */ { "Feldmoching" },
     },
@@ -13,7 +13,7 @@ static const Config configs[] = {
         /* wifi_pass           */ "secret",
         /* type                */ geops_api,
         /* bahnhof             */ "8098263", //Hauptbahnhof
-	/* include_type        */ {"*" },
+        /* include_type        */ {"*" },
         /* include_line        */ { "*" },
         /* exclude_destination */ {  },
     },
@@ -22,7 +22,7 @@ static const Config configs[] = {
         /* wifi_pass           */ "secret",
         /* type                */ mvg_api,
         /* bahnhof             */ "de:09162:2", //Marienplatz
-	/* include_type        */ {"*" },
+        /* include_type        */ {"*" },
         /* include_line        */ { "U2", "S2", "U6" },
         /* exclude_destination */ { },
     },

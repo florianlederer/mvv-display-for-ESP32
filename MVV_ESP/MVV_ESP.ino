@@ -100,8 +100,7 @@ void setup() {
 void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     Config loaded_config = configs[config_number];
-    switch (loaded_config.type)
-    {
+    switch (loaded_config.type) {
       case mvg_api:
         handle_mvg_api(loaded_config);
         break;
@@ -111,15 +110,12 @@ void loop() {
       default:
         Serial.println("Unkown config type");
     }
-  }
-  else
-  {
+  } else {
     Serial.println("Error in WiFi connection");
   }
 }
 
-int connect_wifi()
-{
+int connect_wifi() {
   int number_of_networks = WiFi.scanNetworks();
   if (number_of_networks == -1 ) {
     Serial.println("No networks available");
@@ -143,8 +139,7 @@ int connect_wifi()
   return -1;
 }
 
-void setup_display()
-{
+void setup_display() {
   pinMode (16, OUTPUT);
   digitalWrite (16, LOW); // set GPIO16 low to reset OLED
   delay (50);
@@ -155,8 +150,7 @@ void setup_display()
   delay(1000);
 }
 
-void handle_mvg_api(Config config)
-{
+void handle_mvg_api(Config config) {
   HTTPClient http;
   String url = "https://www.mvg.de/api/fahrinfo/departure/" + String(config.bahnhof) + "?footway=0";
   http.begin(url);
@@ -261,8 +255,7 @@ void handle_mvg_api(Config config)
 }
 
 
-void drawDeparture(int display_line, String line, String destination, int track, int wagon, int minutes)
-{
+void drawDeparture(int display_line, String line, String destination, int track, int wagon, int minutes) {
   String full_name = line + " " + destination;
   String sliced_name = full_name.substring(0, 19);
   display.setTextAlignment (TEXT_ALIGN_LEFT);
@@ -274,8 +267,7 @@ void drawDeparture(int display_line, String line, String destination, int track,
   display.drawString( 128, display_line * 16, String(minutes));
 }
 
-void init_geops_api(Config config)
-{
+void init_geops_api(Config config) {
   bool connected = client.connect("wss://api.geops.io:443/realtime-ws/v1/?key=5cc87b12d7c5370001c1d655306122aa0a4743c489b497cb1afbec9b");
   if (connected) {
     Serial.println("Connecetd!");
@@ -293,21 +285,18 @@ void init_geops_api(Config config)
     if (error) {
       Serial.print(F("deserializeJson() failed: "));
       Serial.println(error.c_str());
-    }
-    else
-    {
+    } else {
       Serial.println("No errors");
-      if (doc["source"] == ("timetable_" + String(config.bahnhof)))
-      {
+      if (doc["source"] == ("timetable_" + String(config.bahnhof))) {
         Departure received_departure;
-        received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>(); 
+        received_departure.aimed_time= doc["content"]["ris_aimed_time"].as<double>();
         received_departure.estimated_time = doc["content"]["time"].as<double>();
         received_departure.line = doc["content"]["line"]["name"].as<String>();
         received_departure.destination = doc["content"]["to"][0].as<String>();
         received_departure.platform = doc["content"]["platform"].as<int>();
         received_departure.wagon = doc["content"]["train_type"].as<int>();
 
-         /*
+        /*
         Serial.println((unsigned long)(received_departure.aimed_time/1000.));
         Serial.println((unsigned long)(received_departure.estimated_time/1000.));
         Serial.println(received_departure.line);
@@ -315,49 +304,46 @@ void init_geops_api(Config config)
         Serial.println(received_departure.platform);
         Serial.println(received_departure.wagon);
         */
-        if (departure_list.empty())
-        {
+        if (departure_list.empty()) {
           Serial.println("EMPTY");
           departure_list.push_back(received_departure);
-        }
-        else
-        {
+        } else {
           Serial.println("Not empty");
           list<Departure>::iterator it1;
-          for (it1 = departure_list.begin(); it1 != departure_list.end(); ++it1)
-          { 
+          for (it1 = departure_list.begin(); it1 != departure_list.end(); ++it1) {
             Serial.println("For loop");
 
-            if (it1->aimed_time == received_departure.aimed_time && it1->line == received_departure.line && it1->destination == received_departure.destination) //Departure schon vorhanden => Update
-            {
+            if (it1->aimed_time == received_departure.aimed_time && it1->line == received_departure.line && it1->destination == received_departure.destination) {
+              // Departure schon vorhanden => Update
               Serial.println("Update");
               *it1 = received_departure;
-              //Sorting to be sure we are sill in correct order
-              departure_list.sort([](const Departure & a, const Departure & b) { return a.estimated_time < b.estimated_time; });
+              // Sorting to be sure we are sill in correct order
+              departure_list.sort([](const Departure & a, const Departure & b) {
+                  return a.estimated_time < b.estimated_time;
+              });
               break;
             }
-            if ( next(it1, 1) == departure_list.end() && departure_list.size() < MAX_DEPARTURE_LIST_LENGTH) //Departure nicht vorhanden
-            {
+            if (next(it1, 1) == departure_list.end() && departure_list.size() < MAX_DEPARTURE_LIST_LENGTH) {
+              // Departure nicht vorhanden
               Serial.println("Departure nicht vorhanden");
               list<Departure>::iterator it2;
-              for (it2 = departure_list.begin(); it2 != departure_list.end(); ++it2)
-              {
-                if (it2->estimated_time > received_departure.estimated_time) //Element richtig einsortieren
-                {
+              for (it2 = departure_list.begin(); it2 != departure_list.end(); ++it2) {
+                if (it2->estimated_time > received_departure.estimated_time) {
+                  // Element richtig einsortieren
                   Serial.println("Departure insert");
                   departure_list.insert(it2, received_departure);
                   break;
                 }
-                if (next(it2,1) == departure_list.end()) //Element ganz hinten einfügen da größter Wert
-                {
+                if (next(it2,1) == departure_list.end()) {
+                  // Element ganz hinten einfügen da größter Wert
                   Serial.println("Departure push_back");
                   departure_list.push_back(received_departure);
                   break; //needed cause otherwise it2 != departure_list.end() will never be true
                 }
               }
             }
-          }  
-        }  
+          }
+        }
       }
     }
   });
@@ -377,24 +363,20 @@ void handle_geops_api(Config config)
   list <Departure> :: iterator it;
   it = departure_list.begin();
   int cnt = 0;
-  while ( !departure_list.empty() && it != departure_list.end() && cnt < 4)
-  {
-    unsigned long estimated_time_s = it->estimated_time/1000;
+  while ( !departure_list.empty() && it != departure_list.end() && cnt < 4) {
+    unsigned long estimated_time_s = it->estimated_time / 1000;
     unsigned long minutes = 0;
 
-    if (estimated_time_s > now) 
-    {
+    if (estimated_time_s > now) {
       unsigned long wait = estimated_time_s - now;
       minutes = wait / 60;
       //if (wait % 60 > 30) ++minutes;
-    }
-    else //abfahrt in der vergangenheit => aus der liste entfernen
-    {
+    } else {
+      // abfahrt in der vergangenheit => aus der liste entfernen
       departure_list.erase (it);
     }
-    
-    if (it != departure_list.end())
-    {
+
+    if (it != departure_list.end()) {
       // Serial.print(it->line);
       // Serial.print("\t");
       // Serial.print(it->destination);
