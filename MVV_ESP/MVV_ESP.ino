@@ -219,6 +219,51 @@ void drawDeparture(int display_line, String line, String destination, int track,
     img.setTextColor(font_color);
     img.drawString(line, 3, y_display); 
   }
+  else if(line[0]=='U') //Ubahn
+  {
+    uint16_t rect_color = 0x005;
+    uint16_t font_color = TFT_WHITE;
+    switch (line[1])
+    {
+    case '1':
+      rect_color = 0x03E0;
+    break; 
+     
+    case '2':
+      rect_color = 0xE800;
+    break;
+
+    case '3':
+      rect_color = TFT_ORANGE;
+    break; 
+
+    case '4':
+      rect_color = 0x05F0;
+      break;
+
+    case '5':
+      rect_color = 0xB963;
+    break;
+
+    case '6':
+      rect_color = TFT_BLUE;
+    break;
+
+    case '7':
+      //TODO: draw two triangles
+    break; 
+
+    case '8':
+       //TODO: draw two triangles
+    break;
+    
+    default:
+      break;
+    }
+    img.fillRect(1, y_display, 28, 15, rect_color);
+    img.setTextColor(font_color);
+    img.drawString(line, 3, y_display); 
+  }
   else //default
   {
     img.setTextColor(TFT_WHITE);
