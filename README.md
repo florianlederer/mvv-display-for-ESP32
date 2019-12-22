@@ -21,7 +21,7 @@ suchen und installieren.
 Download das folgene ZIP-Archiv (https://github.com/lennarthennigs/Button2/zipball/master), 
 wähle unter "Sketch > Include Library > Add .ZIP Library..." den heruntergeladenen File aus um die Bibliothek zu verlinken.
 
-1.  Tools -> Board -> "TTGO T1" auswählen.
+1.  Tools -> Board -> "ESP32 Dev Module" auswählen.
 1.  Tools ->  Port anschauen und die Enträge merken falls nicht ausgeblendet.
 1.  ESP32 mit dem Kabel mit dem Computer verbinden und erneut unter Tools ->  Port schauen nun müsste ein neuer Port hinzugekommen sein/ Port ist nicht mehr ausgeblendet. Diesen nun auswählen.
 1. MVV_ESP/MVV_ESP.ino aus diesem Repo kopieren und in der Arduino IDE einfügen.
