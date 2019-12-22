@@ -56,7 +56,9 @@ GET timetable_8098263 | Liefert die aktuellen Abfahrtzeiten am Hauptbahnhof (uic
 SUB timetable_8098263 | Abboniert die Abfahrtzeiten am Hauptbahnhof (uic=8098263)
 DEL timetable_8098263 | Deabboniert die Abfahrtzeiten am Hauptbahnhof (uic=8098263)
 
-Während GET einmalig die nächsten Abfahrten liefert, bekommt der Client mit SUB immer automatisch eine Aktualisierung. Die uic Bahnhofsnummer ist nicht identisch mit der id der MVG API. Im folgenden Kapitel gibt es eine Liste mit allen Bahnhöfen und ihren uic Nummern. Der Server antwortet immer im JSON Format. 
+Während GET einmalig die nächsten Abfahrten liefert, bekommt der Client mit SUB immer automatisch eine Aktualisierung. Die uic Bahnhofsnummer ist nicht identisch mit der id der MVG API. Im folgenden Kapitel gibt es eine Liste mit allen Bahnhöfen und ihren uic Nummern. Der Server antwortet immer im JSON Format.  
+
+Damit eine Verbindung länger erhalten bleibt, muss in gewissen Abständen (ca. 10s) ein PING Kommando an der Server geschickt werden.
 
 Zum Ausprobieren der Kommandos kann der Client WS-GUII verwendet werden. Hierfür muss nur die oben aufgeführte Server URL eingetragen werden und ein Kommando abgschickt werden: [https://github.com/kbjr/ws-gui](https://github.com/kbjr/ws-gui)
 
