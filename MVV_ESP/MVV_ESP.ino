@@ -21,7 +21,8 @@ using namespace std;
 #include <SPI.h>
 #include "WiFi.h"
 #include <Wire.h>
-#include "Free_Fonts.h" // Include the header file attached to this sketchtft.setFreeFont(FSB9);
+#include "Free_Fonts.h"
+#include "Free_Sans.h"
 #include <Button2.h>
 
 #define MAX_INCLUDE_TYPE 10
@@ -171,9 +172,12 @@ void drawDeparture(int display_line, String line, String destination, int track,
   char str_buffer[10];
   int line_height = 15;
   int offset = 9;
+  int offest_string = 7;
   int y_display = display_line*line_height+offset;
+  int y_display_string = display_line*line_height+offest_string;
     
-  img.setFreeFont(FF17);
+  //img.setFreeFont(FF17);
+  img.setFreeFont(&FreeSans9pt8b);
   img.setTextDatum(TL_DATUM);
 
   //line
@@ -217,7 +221,7 @@ void drawDeparture(int display_line, String line, String destination, int track,
     }
     img.fillRoundRect(0, y_display, 28, 15, 7,rect_color);
     img.setTextColor(font_color);
-    img.drawString(line, 3, y_display); 
+    img.drawString(line, 3, y_display_string); 
   }
   else if(line[0]=='U') //Ubahn
   {
@@ -267,28 +271,28 @@ void drawDeparture(int display_line, String line, String destination, int track,
        img.fillRect(1, y_display, 28, 15, rect_color);
      }
     img.setTextColor(font_color);
-    img.drawString(line, 3, y_display); 
+    img.drawString(line, 3, y_display_string); 
   }
   else //default
   {
     img.setTextColor(TFT_WHITE);
-    img.drawString(line, 3, y_display); 
+    img.drawString(line, 3, y_display_string); 
   }
   
   
   //destination
   img.setTextColor(TFT_WHITE);
-  img.drawString(destination.substring(0, 11), 32, y_display);
+  img.drawString(destination.substring(0, 11), 32, y_display_string);
 
   //track 
   if(track !=0)
   {
     sprintf(str_buffer, "%u", track);
-    img.drawString(str_buffer, 150, y_display);
+    img.drawString(str_buffer, 150, y_display_string);
   }
 
   //wagon
-  if(wagon == 1 || wagon == 2 || wagon == 3) img.drawString("_ _ _", 167, y_display);
+  if(wagon == 1 || wagon == 2 || wagon == 3) img.drawString("_ _ _", 167, y_display_string);
   switch(wagon)
   {
     case 3:
@@ -304,7 +308,7 @@ void drawDeparture(int display_line, String line, String destination, int track,
   //minutes
   img.setTextDatum(TR_DATUM);
   sprintf(str_buffer, "%u", minutes);
-  img.drawString(str_buffer, 240,y_display);
+  img.drawString(str_buffer, 240,y_display_string);
   
 }
 
