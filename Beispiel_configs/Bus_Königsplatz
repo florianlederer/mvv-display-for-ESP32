@@ -12,7 +12,7 @@ static const Config configs[] = {
     },
 
 
-//Beispiel ohne Bus-Linie 58 
+//Beispiel nur Bus 68 und 100 (ohne Bus-Linie 58)
     // {
     //     /* wifi_name           */ "wifi_test",
     //     /* wifi_pass           */ "wifi_pw",
