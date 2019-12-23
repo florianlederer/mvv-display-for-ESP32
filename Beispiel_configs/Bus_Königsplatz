@@ -20,7 +20,7 @@ static const Config configs[] = {
     //     /*url                  */"de:09162:110",
 	  //     /* include_type        */ {"BUS" },
     //     /* include_line        */ {"68","100"},
-    //     /* exclude_destination */ {"58"},
+    //     /* exclude_destination */ {},
     // },
 };
 
