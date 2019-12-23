@@ -414,7 +414,7 @@ Weßling(Oberbay) | 8006359
 Wolfratshausen | 8006550
 Zorneding | 8006671
 ### Library:
-Es wird die ArduinoWebockets Library benötigt: [https://github.com/gilmaimon/ArduinoWebsockets](https://github.com/gilmaimon/ArduinoWebsockets)
+Es wird die ArduinoWebsockets Library benötigt: [https://github.com/gilmaimon/ArduinoWebsockets](https://github.com/gilmaimon/ArduinoWebsockets)
 
 ### Quellen:
 [https://s-bahn-muenchen-live.de](https://s-bahn-muenchen-live.de)  
