@@ -9,7 +9,8 @@ static const Config configs[] = {
         /* exclude_destination */ {},
     },
 
-//Credentials am Smartphone-Hotspot entsprechend neu einstellen. 
+//Credentials am Smartphone-Hotspot entsprechend neu einstellen
+//Mit Powerbank Anzeige unterwegs (auf dem Weg zur Haltestelle nutzen)  
 //Für wifi-Verbindungswechsel Controller per reset-button neu powern
     {
         /* wifi_name           */ "test_hotspot",
