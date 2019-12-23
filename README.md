@@ -43,6 +43,180 @@ In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahr
 ## MVG API:
 Die MVG API liefert Infos für alle Verkehrsmittel der MVG (Bus/Sbahn/Ubahn/Tram). Sie stellt die Grundlage für die MVG Website sowie die MVG Naviagtor App dar. Allerdings sind die Echtzeitinformationen besonders bei Störungen nicht optimal. Aus diesem Grund  kann ach die geops-API verwendet werden, die unteranderem in der München Navigator APP oder auf s-bahn-muenchen-live.de zum Einsatz kommt. Hier bekommt man sehr genaue Echtzeitinformationen, allerdings ausschließlich für die Sbahn.
 
+### Server
+URL                     | Port     | Protokoll
+------------------------| -------- | --------
+https://www.mvg.de/api | 443      | HTTP
+
+### Kommandos
+Die wichtigesten Kommandos für dieses Projekt sind hier beispielhaft aufgelistet: 
+
+Kommando                                     | Funktion 
+----------------------------------           |---------------------------------------------------------------------------
+/fahrinfo/location/queryWeb?q=               | Liefert Infos zu allen  Bahnhöfen (z.B. id)
+/fahrinfo/location/queryWeb?q=Marienplatz    | Liefert Infos zu allen Bahnhöfen am Marienplatz
+/fahrinfo/departure/de:09162:2?footway=0     | Liefert die aktuellen Abfahrtzeiten am Marienplatz (id=de:09162:2)
+
+Der Server antwortet immer im JSON Format.
+
+Eine Beispielantwort eines location Paketes sieht folgendermaßen aus:
+```json
+{
+  "locations" : [ {
+    "type" : "station",
+    "latitude" : 48.13725,
+    "longitude" : 11.57542,
+    "id" : "de:09162:2",
+    "divaId" : 2,
+    "place" : "München",
+    "name" : "Marienplatz",
+    "hasLiveData" : true,
+    "hasZoomData" : true,
+    "products" : [ "SBAHN", "UBAHN", "BUS" ],
+    "aliases" : "Rathaus Bf. Bahnhof München Muenchen Munchen",
+    "link" : "MP",
+    "lines" : {
+      "tram" : [ ],
+      "nachttram" : [ ],
+      "sbahn" : [ ],
+      "ubahn" : [ ],
+      "bus" : [ ],
+      "nachtbus" : [ ],
+      "otherlines" : [ ]
+    }
+  }, {
+    "type" : "station",
+    "latitude" : 48.40054,
+    "longitude" : 11.74386,
+    "id" : "de:09178:2851",
+    "divaId" : 2851,
+    "place" : "Freising",
+    "name" : "Marienplatz",
+    "hasLiveData" : false,
+    "hasZoomData" : false,
+    "products" : [ "BUS" ],
+    "aliases" : "FS",
+    "lines" : {
+      "tram" : [ ],
+      "nachttram" : [ ],
+      "sbahn" : [ ],
+      "ubahn" : [ ],
+      "bus" : [ ],
+      "nachtbus" : [ ],
+      "otherlines" : [ ]
+    }
+  }]
+}
+```
+
+Eine Beispielantwort eines departure Paketes sieht folgendermaßen aus:
+```json
+{
+  "servingLines" : [ {
+    "destination" : "Ostbahnhof",
+    "sev" : false,
+    "partialNet" : "mvv",
+    "product" : "SBAHN",
+    "lineNumber" : "S1",
+    "divaId" : "01001"
+  }, {
+    "destination" : "Leuchtenbergring",
+    "sev" : false,
+    "partialNet" : "ddb",
+    "product" : "SBAHN",
+    "lineNumber" : "S1",
+    "divaId" : "92M01"
+  }, {
+    "destination" : "Ostbahnhof",
+    "sev" : false,
+    "partialNet" : "ddb",
+    "product" : "SBAHN",
+    "lineNumber" : "S2",
+    "divaId" : "92M02"
+  }, {
+    "destination" : "Holzkirchen",
+    "sev" : false,
+    "partialNet" : "ddb",
+    "product" : "SBAHN",
+    "lineNumber" : "S3",
+    "divaId" : "92M03"
+  }, {
+    "destination" : "Ostbahnhof",
+    "sev" : false,
+    "partialNet" : "ddb",
+    "product" : "SBAHN",
+    "lineNumber" : "S4",
+    "divaId" : "92M04"
+  }, {
+    "destination" : "Ostbahnhof",
+    "sev" : false,
+    "partialNet" : "ddb",
+    "product" : "SBAHN",
+    "lineNumber" : "S6",
+    "divaId" : "92M06"
+  }, {
+    "destination" : "Höhenkirchen-Siegertsbrunn",
+    "sev" : false,
+    "partialNet" : "ddb",
+    "product" : "SBAHN",
+    "lineNumber" : "S7",
+    "divaId" : "92M07"
+  }, {
+    "destination" : "Flughafen München",
+    "sev" : false,
+    "partialNet" : "ddb",
+    "product" : "SBAHN",
+    "lineNumber" : "S8",
+    "divaId" : "92M08"
+  }, {
+    "destination" : "Fürstenried West",
+    "sev" : false,
+    "partialNet" : "swm",
+    "product" : "UBAHN",
+    "lineNumber" : "U3",
+    "divaId" : "010U3"
+  }, {
+    "destination" : "Harras",
+    "sev" : false,
+    "partialNet" : "swm",
+    "product" : "UBAHN",
+    "lineNumber" : "U6",
+    "divaId" : "010U6"
+  }, {
+    "destination" : "Forstenrieder Park",
+    "sev" : false,
+    "partialNet" : "swm",
+    "product" : "BUS",
+    "lineNumber" : "132",
+    "divaId" : "03132"
+  } ],
+  "departures" : [ {
+    "departureTime" : 1577118720000,
+    "product" : "SBAHN",
+    "label" : "S6",
+    "destination" : "Zorneding",
+    "live" : false,
+    "delay" : 1,
+    "cancelled" : false,
+    "lineBackgroundColor" : "#03a074",
+    "departureId" : "35e650addb0e2620032f5f79e27d4d08#1577118720000#de:09162:2",
+    "sev" : false,
+    "platform" : "1"
+  }, {
+    "departureTime" : 1577118840000,
+    "product" : "UBAHN",
+    "label" : "U6",
+    "destination" : "Garching, Forschungszentrum",
+    "live" : false,
+    "delay" : 0,
+    "cancelled" : false,
+    "lineBackgroundColor" : "#0472b3",
+    "departureId" : "f0aefa74fcb536b1b073913a5f9bbc84#1577118840000#de:09162:2",
+    "sev" : false,
+    "platform" : "Gleis 1"
+  }]
+}
+```
 ## Geops API Sbahn München:
 Diese API kommt unter anderem in der München Navigator APP oder auf s-bahn-muenchen-live.de zum Einsatz und liefert sehr genaue Echtzeitinformationen, allerdings ausschließlich für die Sbahn. Alle nachfolgenden Erkenntnisse stammen aus öffentlichen Quellen oder aus Mitschnitten und Analysen des Netzwerktraffics.
 
