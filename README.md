@@ -7,13 +7,16 @@ In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahr
 - Micro USB Kabel
 - USB Netzteil
 - Computer zum Programmieren
-<img src="images/mvv_display_U2_Königsplatz.jpg" width="50%">
+
+<img src="images/V1.jpg" width="50%">
 
 ## Benötigtes Version 2 LCD Display (empfohlen):
 - ESP32 TTGO-T-Display:  https://www.amazon.de/dp/B07VNG9D52/
 - USB-C Kabel
 - USB Netzteil
 - Computer zum Programmieren
+
+<img src="images/V2.jpg" width="52%">
 
 ## Anleitung:
 1.  Arduino IDE installieren: https://www.arduino.cc/en/main/software
