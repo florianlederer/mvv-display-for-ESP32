@@ -55,14 +55,14 @@ und nach den folgenden Libraries suchen und installieren:
     1. HINWEIS: Filter funktionieren aktuell nur mit der mvg_api und werden von der geops_api ignoriert.
 1. Sketch -> Verify/Compile 
 
-<img src="images/ide_pic_readme4.png" width="50%">
+<img src="images/ide_pic_readme4.png" width="20%">
 
 und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
 1. Sketch -> Upload
 
-<img src="images/ide_pic_readme5.png" width="50%">
-<img src="images/ide_pic_readme6.png" width="50%">
-<img src="images/ide_pic_readme7.png" width="50%">
+<img src="images/ide_pic_readme5.png" width="20%">
+<img src="images/ide_pic_readme6.png" width="75%">
+<img src="images/ide_pic_readme7.png" width="75%">
 
 1. Nach kurzer Zeit sollten auf dem Display die aktuellen Abfahrten angezeigt werden.
 1. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden.
