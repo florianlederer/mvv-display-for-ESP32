@@ -1,5 +1,5 @@
 # mvv display for ESP32
-Die nächsten Abfahrten des Münchner Nahverkehrs werden auf einem kleinem Display angezeigt. Es handelt sich hierbei um kein Projekt der MVV. Akutell gibt es zwei Varianten des Projektes. Die neuere Version 2 unterscheidet sich vom Vorgänger durch ein größeres Farb Display. Damit können weitere Informationen wie z.B. Gleis und Wagonzahl angezeigt werden. Aus diesem Grund wird empfohlen die neuere Variante zu verwenden.
+In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahrten des Münchner Nahverkehrs auf einem kleinem Display angezeigt werden. Es handelt sich hierbei um kein Projekt der MVV. Akutell gibt es zwei Varianten des Projektes. Die neuere Version 2 unterscheidet sich vom Vorgänger durch ein größeres Farb Display. Damit können weitere Informationen wie z.B. Gleis und Wagonzahl angezeigt werden. Aus diesem Grund wird empfohlen die neuere Variante zu verwenden.
 
 ## Benötigtes Version 1 OLED Display (obsolet):
 - ESP32 mit OLED Display: https://www.amazon.de/dp/B076P8GRWV/
