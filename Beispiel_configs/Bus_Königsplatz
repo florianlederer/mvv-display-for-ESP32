@@ -19,7 +19,7 @@ static const Config configs[] = {
     //     /* type                */ mvg_api,
     //     /*url                  */"de:09162:110",
 	  //     /* include_type        */ {"BUS" },
-    //     /* include_line        */ { "*" },
+    //     /* include_line        */ {"68","100"},
     //     /* exclude_destination */ {"58"},
     // },
 };
