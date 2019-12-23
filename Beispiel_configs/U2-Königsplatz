@@ -10,7 +10,7 @@ static const Config configs[] = {
     },
 
 //Credentials am Smartphone-Hotspot entsprechend neu einstellen
-//Mit Powerbank Anzeige unterwegs (auf dem Weg zur Haltestelle nutzen)  
+//Mit Powerbank/LiPo-Akku Anzeige unterwegs (auf dem Weg zur Haltestelle nutzen)  
 //Für wifi-Verbindungswechsel Controller per reset-button neu powern
     {
         /* wifi_name           */ "test_hotspot",
