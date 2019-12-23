@@ -1,6 +1,6 @@
 static const Config configs[] = {
     {
-        /* wifi_name           */ "Twifi_test",
+        /* wifi_name           */ "wifi_test",
         /* wifi_pass           */ "wifi_pw",
         /* type                */ mvg_api,
         /* url                 */ "de:09162:502",
