@@ -70,6 +70,8 @@ void init_geops_api(Config config);
 void handle_geops_api(Config config);
 void ping_geops_api();
 
+static unsigned long last_time = 0;
+
 void setup() {
 
   Serial.begin(115200);
@@ -92,6 +94,8 @@ void setup() {
     default:
       Serial.println("Unkown config type");
       break;
+
+  
   }
 
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
@@ -103,10 +107,14 @@ void loop() {
     Config loaded_config = configs[config_number];
     switch (loaded_config.type) {
       case mvg_api:
-        handle_mvg_api(loaded_config);
+        if(millis() > last_time + 10000) 
+        {
+          last_time = millis();
+          handle_mvg_api(loaded_config);
+        }
         break;
       case geops_api:
-        static unsigned long last_time = 0;
+        
         handle_geops_api(loaded_config);
         if(millis() > last_time + 10000)
         {
@@ -223,6 +231,7 @@ void handle_mvg_api(Config config) {
         bool interesting_type = false;
         bool interesting_line = false;
         bool interesting_destination = true;
+        bool intersting_departure_time = true;
 
         for (int j = 0; j < MAX_INCLUDE_TYPE; ++j) {
           Serial.println(config.include_type[j]);
@@ -265,7 +274,7 @@ void handle_mvg_api(Config config) {
           Serial.println(departure);
 
           unsigned long minutes = 0;
-          if ( departure > now) {
+          if ( departure > now) {                
             unsigned long wait = departure - now;
             Serial.println(wait);
             minutes = wait / 60;
@@ -287,7 +296,6 @@ void handle_mvg_api(Config config) {
     Serial.println(httpResponseCode);
   }
   http.end();
-  delay(30000);  //Send a request every 30 seconds
 }
 
 
