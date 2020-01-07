@@ -43,7 +43,7 @@ In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahr
 1. Sketch -> Verify/Compile und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
 1. Sketch -> Upload
 1. Nach kurzer Zeit sollten auf dem Display die aktuellen Abfahrten angezeigt werden.
-1. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden.
+1. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden. Baudrate ist standartmäßig 115200.
 
 ## MVG API:
 Die MVG API liefert Infos für alle Verkehrsmittel der MVG (Bus/Sbahn/Ubahn/Tram). Sie stellt die Grundlage für die MVG Website sowie die MVG Naviagtor App dar. Allerdings sind die Echtzeitinformationen besonders bei Störungen nicht optimal. Aus diesem Grund  kann ach die geops-API verwendet werden, die unteranderem in der München Navigator APP oder auf s-bahn-muenchen-live.de zum Einsatz kommt. Hier bekommt man sehr genaue Echtzeitinformationen, allerdings ausschließlich für die Sbahn.
