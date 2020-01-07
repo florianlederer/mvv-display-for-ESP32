@@ -231,7 +231,6 @@ void handle_mvg_api(Config config) {
         bool interesting_type = false;
         bool interesting_line = false;
         bool interesting_destination = true;
-        bool intersting_departure_time = true;
 
         for (int j = 0; j < MAX_INCLUDE_TYPE; ++j) {
           Serial.println(config.include_type[j]);
