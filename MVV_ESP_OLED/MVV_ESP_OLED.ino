@@ -71,6 +71,7 @@ void handle_geops_api(Config config);
 void ping_geops_api();
 
 static unsigned long last_time = 0;
+static unsigned long update_time = 10000; //Update every 10secs
 
 void setup() {
 
@@ -107,7 +108,7 @@ void loop() {
     Config loaded_config = configs[config_number];
     switch (loaded_config.type) {
       case mvg_api:
-        if(millis() > last_time + 10000) 
+        if(millis() > last_time + update_time) 
         {
           last_time = millis();
           handle_mvg_api(loaded_config);
@@ -116,7 +117,7 @@ void loop() {
       case geops_api:
         
         handle_geops_api(loaded_config);
-        if(millis() > last_time + 10000)
+        if(millis() > last_time + update_time)
         {
           last_time = millis();
           ping_geops_api();     
