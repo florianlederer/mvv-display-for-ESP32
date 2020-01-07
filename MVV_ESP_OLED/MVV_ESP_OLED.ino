@@ -115,7 +115,6 @@ void loop() {
         }
         break;
       case geops_api:
-        
         handle_geops_api(loaded_config);
         if(millis() > last_time + update_time)
         {
