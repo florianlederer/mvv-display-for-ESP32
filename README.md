@@ -1,6 +1,13 @@
 # mvv display for ESP32
 In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahrten des Münchner Nahverkehrs auf einem kleinem Display angezeigt werden. Es handelt sich hierbei um kein Projekt der MVV. Akutell gibt es zwei Varianten des Projektes. Die neuere Version 2 unterscheidet sich vom Vorgänger durch ein größeres Farb Display. Damit können weitere Informationen wie z.B. Gleis und Wagonzahl angezeigt werden. Aus diesem Grund wird empfohlen die neuere Variante zu verwenden.
 
+## Benötigtes Version 2 LCD Display (empfohlen):
+- ESP32 TTGO-T-Display:  https://www.amazon.de/dp/B07VNG9D52/
+- USB-C Kabel
+- USB Netzteil
+- Computer zum Programmieren
+
+<img src="images/V2_new.jpg" width="52%">
 
 ## Benötigtes Version 1 OLED Display (obsolet):
 - ESP32 mit OLED Display: https://www.amazon.de/dp/B076P8GRWV/
@@ -9,14 +16,6 @@ In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahr
 - Computer zum Programmieren
 
 <img src="images/V1.jpg" width="50%">
-
-## Benötigtes Version 2 LCD Display (empfohlen):
-- ESP32 TTGO-T-Display:  https://www.amazon.de/dp/B07VNG9D52/
-- USB-C Kabel
-- USB Netzteil
-- Computer zum Programmieren
-
-<img src="images/V2.jpg" width="52%">
 
 ## Anleitung:
 1.  Arduino IDE installieren: https://www.arduino.cc/en/main/software
