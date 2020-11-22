@@ -20,15 +20,28 @@ In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahr
 ## Anleitung:
 1.  Arduino IDE installieren: https://www.arduino.cc/en/main/software
 1.  ESP32 Board installieren: https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/
-1.  Tools -> Manage Libraries.. anklicken und nach den folgenden Libraries suchen und installieren: 
+1.  Tools -> Manage Libraries.. anklicken 
+
+<img src="images/ide_pic_readme.png" width="50%">
+
+und nach den folgenden Libraries suchen und installieren: 
     1. "Arduinojson" (by Benoit Blanchon)
+    
+    <img src="images/ide_pic_readme1.png" width="50%">
+    
     1. "ArduinoWebsockets" (by Gil Maimon)
     1. "ESP8266 and ESP32 OLED driver for SSD1306 displays" (by ThingPulse, Fabrice Weinberg) (Benötigt für Version 1)
     1. "TFT_eSPI" (by Bodmer) (Benötigt für Version 2)
 1. Den Arduino Library Ordner öffnen und die "TFT_eSPI" wie hier in Schritt 2 erklärt, modifizieren: https://github.com/Xinyuan-LilyGO/TTGO-T-Display (Benötigt für Version 2)
 1. Installiere die "Button2" Library: Das folgende ZIP-Archiv (https://github.com/lennarthennigs/Button2/zipball/master) herunterladen. Unter "Sketch > Include Library > Add .ZIP Library..." das heruntergeladene File auswählen um die Bibliothek zu installieren. (Benötigt für Version 2)
 1.  Tools -> Board -> "ESP32 Dev Module" auswählen.
+
+<img src="images/ide_pic_readme2.png" width="50%">
+
 1.  Tools ->  Port anschauen und die Enträge merken falls nicht ausgeblendet.
+
+<img src="images/ide_pic_readme3.png" width="50%">
+
 1.  ESP32 mit dem Kabel mit dem Computer verbinden und erneut unter Tools ->  Port schauen nun müsste ein neuer Port hinzugekommen sein/ Port ist nicht mehr ausgeblendet. Diesen nun auswählen.
 1. Dieses Repo als ZIP herunterladen und MVV_ESP_XXXX/MVV_ESP_XXXX.ino (Version 1: OLED, Version 2: LCD)  in der Arduino IDE öffnen.
 1. MVV_ESP_XXXX/config.h.dist in config.h umbennenen und minderstens eine eigene Konfiguration eintragen: 
@@ -39,8 +52,17 @@ In diesem Projekt wird eine Echtzteitanzeige gebaut mit der die nächsten Abfahr
     1. Ein `*` bei include_line zeigt alle verfügbaren Linien an (mögliche Filter: z.B. "S8", "U3", "17")
     1. exclude_destinations kann bei Bedarf leer gelassen werden (mögliche Filter: z.B. "Feldmoching", "Pasing")
     1. HINWEIS: Filter funktionieren aktuell nur mit der mvg_api und werden von der geops_api ignoriert.
-1. Sketch -> Verify/Compile und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
+1. Sketch -> Verify/Compile 
+
+<img src="images/ide_pic_readme4.png" width="20%">
+
+und schauen ob irgendwelche Fehler in der Konsole auftreten. Gegebenfalls die Libraries überprüfen.
 1. Sketch -> Upload
+
+<img src="images/ide_pic_readme5.png" width="20%">
+<img src="images/ide_pic_readme6.png" width="75%">
+<img src="images/ide_pic_readme7.png" width="75%">
+
 1. Nach kurzer Zeit sollten auf dem Display die aktuellen Abfahrten angezeigt werden.
 1. Zum Debuggen kann der Serielle Monitor unter Tools -> Serial Monitor aufgerufen werden.
 
