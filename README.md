@@ -230,7 +230,7 @@ In jedem Zug befindet sich eine Art GPS Tracker. Circa alle 10 Sekunden werden d
 ### Server
 URL                                                                                             | Port     | Protokoll
 ------------------------------------------------------------------------------------------------| -------- | --------
-wss://api.geops.io/realtime-ws/v1/?key=5cc87b12d7c5370001c1d655306122aa0a4743c489b497cb1afbec9b | 443      | Websocket
+wss://api.geops.io/realtime-ws/v1/?key=<API_KEY> | 443      | Websocket
 
 ### Kommandos
 Die Kommandos die an den Server geschickt werden sind in der redis-websocket-api definiert. Die wichtigesten Kommandos für dieses Projekt mit ihren Keys sind hier aufgelistet: 
